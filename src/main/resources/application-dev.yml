@@ -1,0 +1,44 @@
+# This profile is the for connecting to your local H2 Database
+server:
+  port: 8080
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${POKE_EMAIL}
+    password: ${POKE_PASS}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
+  config:
+    activate:
+      on-profile: dev
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+    open-in-view: true # Turn off OSIV warning
+    properties:
+      hibernate.format_sql: true
+    show-sql: true
+  jmx:
+    enabled: false # Disabled to make spring boot start faster
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:memdb
+    username: sa
+    password: password
+  devtools.restart.enabled: false # Disable Spring auto restart
+  h2:
+    console.enabled: true
+  output:
+    ansi.enabled: never # turn on colors in Spring console
+logging:
+  file.name: logs/application-debug.log
+  level:
+    web: debug
+jwt.secret: ${JWT_SECRET}
+frontend.url: ${POKEPOST_FRONTEND_URL}

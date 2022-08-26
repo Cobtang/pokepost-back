@@ -1,0 +1,19 @@
+# This profile is the default
+server:
+  port: 5000
+spring:
+  profiles:
+    active: test
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    defer-datasource-initialization: true
+    open-in-view: true # Turn off OSIV warning
+  devtools.restart.enabled: false # Disable Spring auto restart
+  output:
+    ansi.enabled: never # turn on colors in Spring console
+logging:
+  file.name: logs/application-debug.log
+  level:
+    web: debug
