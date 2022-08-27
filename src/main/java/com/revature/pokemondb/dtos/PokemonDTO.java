@@ -1,4 +1,4 @@
-package com.revature.pokemondb.models.dtos;
+package com.revature.pokemondb.dtos;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
+import com.revature.pokemondb.dtos.PokemonDTO;
+import com.revature.pokemondb.dtos.UserIdDTO;
 import com.revature.pokemondb.models.Pokemon;
 import com.revature.pokemondb.models.User;
 import com.revature.pokemondb.models.Wishlist;
-import com.revature.pokemondb.models.dtos.PokemonDTO;
-import com.revature.pokemondb.models.dtos.UserIdDTO;
 import com.revature.pokemondb.repositories.WishlistRepository;
 import com.revature.pokemondb.repositories.PokemonRepository;
 import com.revature.pokemondb.repositories.UserRepository;

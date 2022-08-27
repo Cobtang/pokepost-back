@@ -13,36 +13,31 @@ import javax.persistence.Table;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.revature.pokemondb.models.dtos.UserBodyDTO;
-import com.revature.pokemondb.models.dtos.UserDTO;
+import com.revature.pokemondb.dtos.UserBodyDTO;
+import com.revature.pokemondb.dtos.UserDTO;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Colby Tang
  */
+@Data
+@NoArgsConstructor
 @Entity
 @Table(name = "users", schema = "pokemon_db")
 public class User {
 	@Id
-	@Column(name="id", updatable=false, insertable=false)
+	@Column(name = "id", updatable = false, insertable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long userId = 0l; 
+	private Long userId = 0l;
 	private String username;
 	private String email;
-	@Column(name = "role")
 	private String role;
-	@Column(name = "passwd")
 	private String password;
 	private byte[] salt;
 
-	public User () {
-		this.userId = 0l;
-		this.username = "";
-		this.email = "";
-		this.password = "";
-		this.role = "user";
-	}
-
-	public User (long id) {
+	public User(long id) {
 		this.userId = id;
 		this.username = "";
 		this.email = "";
@@ -62,13 +57,13 @@ public class User {
 	}
 
 	@Autowired
-    public User(Long userId, String username, String email, String password) {
+	public User(Long userId, String username, String email, String password) {
 		this.userId = userId;
 		this.username = username;
 		this.email = email;
 		this.password = password;
 	}
-	
+
 	public User(Long userId, String username, String email, String password, byte[] salt) {
 		this.userId = userId;
 		this.username = username;
@@ -77,7 +72,7 @@ public class User {
 		this.password = password;
 	}
 
-	public User (User user) {
+	public User(User user) {
 		this.userId = user.getUserId();
 		this.username = user.getUsername();
 		this.email = user.getEmail();
@@ -86,14 +81,14 @@ public class User {
 		this.role = user.getRole();
 	}
 
-	public User (UserDTO user) {
+	public User(UserDTO user) {
 		this.userId = user.getUserId();
 		this.username = user.getUsername();
 		this.email = user.getEmail();
 		this.role = user.getRole();
 	}
 
-	public User (Map<String, String> map) {
+	public User(Map<String, String> map) {
 		if ((map.get("userId") != null)) {
 			this.userId = Long.valueOf(map.get("userId"));
 		}
@@ -110,8 +105,7 @@ public class User {
 
 		if (map.get("role") != null) {
 			this.role = map.get("role");
-		}
-		else {
+		} else {
 			this.role = "user";
 		}
 	}
@@ -123,84 +117,6 @@ public class User {
 		this.salt = user.getSalt();
 		this.password = user.getPassword();
 		this.role = user.getRole();
-    }
-
-    /** 
-	 * @return int
-	 */
-	public Long getUserId() {
-		return userId;
-	}
-	
-	/** 
-	 * @param userId
-	 */
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
-	
-	/** 
-	 * @return String
-	 */
-	public String getUsername() {
-		return username;
-	}
-	
-	/** 
-	 * @param username
-	 */
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	
-	/** 
-	 * @return String
-	 */
-	public String getEmail() {
-		return email;
-	}
-	
-	/** 
-	 * @param email
-	 */
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	
-	/** 
-	 * @return String
-	 */
-	public String getPassword() {
-		return password;
-	}
-	
-	/** 
-	 * @param password
-	 */
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	/** 
-	 * @return byte[]
-	 */
-	public byte[] getSalt() {
-        return salt;
-    }
-
-	/** 
-	 * @param salt
-	 */
-	public void setSalt(byte[] salt) {
-        this.salt = salt;
-    }
-
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole (String role) {
-		this.role = role;
 	}
 
 	@Override
@@ -226,7 +142,7 @@ public class User {
 				&& Objects.equals(username, other.username);
 	}
 
-	/** 
+	/**
 	 * @return String
 	 */
 	@Override

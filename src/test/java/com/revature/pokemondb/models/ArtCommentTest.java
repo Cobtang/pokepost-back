@@ -8,8 +8,8 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.revature.pokemondb.models.dtos.FanartDTO;
-import com.revature.pokemondb.models.dtos.UserIdDTO;
+import com.revature.pokemondb.dtos.FanartDTO;
+import com.revature.pokemondb.dtos.UserIdDTO;
 
 @SpringBootTest
 class ArtCommentTest {

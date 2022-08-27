@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.revature.pokemondb.dtos.PokemonDTO;
 import com.revature.pokemondb.models.Pokemon;
-import com.revature.pokemondb.models.dtos.PokemonDTO;
 
 public interface PokemonService {
     public String getPokemonJSON(int pokemonId);

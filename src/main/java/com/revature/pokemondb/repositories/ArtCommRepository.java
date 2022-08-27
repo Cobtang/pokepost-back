@@ -2,8 +2,8 @@ package com.revature.pokemondb.repositories;
 
 import org.springframework.stereotype.Repository;
 
+import com.revature.pokemondb.dtos.FanartDTO;
 import com.revature.pokemondb.models.ArtComment;
-import com.revature.pokemondb.models.dtos.FanartDTO;
 
 import java.util.List;
 

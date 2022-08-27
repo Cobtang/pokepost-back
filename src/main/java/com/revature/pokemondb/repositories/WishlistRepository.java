@@ -9,12 +9,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.revature.pokemondb.dtos.PokemonDTO;
+import com.revature.pokemondb.dtos.UserDTO;
+import com.revature.pokemondb.dtos.UserIdDTO;
 import com.revature.pokemondb.models.Pokemon;
 import com.revature.pokemondb.models.User;
 import com.revature.pokemondb.models.Wishlist;
-import com.revature.pokemondb.models.dtos.PokemonDTO;
-import com.revature.pokemondb.models.dtos.UserDTO;
-import com.revature.pokemondb.models.dtos.UserIdDTO;
 
 @Repository
 public interface WishlistRepository extends JpaRepository<Wishlist, Long> {

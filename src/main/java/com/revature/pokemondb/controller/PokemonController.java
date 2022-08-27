@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.pokemondb.auth.Auth;
+import com.revature.pokemondb.dtos.PokemonDTO;
 import com.revature.pokemondb.models.Pokemon;
-import com.revature.pokemondb.models.dtos.PokemonDTO;
 import com.revature.pokemondb.services.PokemonService;
 
 @RestController

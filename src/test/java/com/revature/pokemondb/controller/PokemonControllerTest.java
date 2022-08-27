@@ -16,8 +16,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.revature.pokemondb.dtos.PokemonDTO;
 import com.revature.pokemondb.models.Pokemon;
-import com.revature.pokemondb.models.dtos.PokemonDTO;
 import com.revature.pokemondb.services.PokemonService;
 
 @WebMvcTest(controllers=PokemonController.class)

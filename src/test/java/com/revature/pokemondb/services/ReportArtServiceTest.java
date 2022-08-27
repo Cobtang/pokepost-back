@@ -10,9 +10,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.revature.pokemondb.dtos.FanartDTO;
+import com.revature.pokemondb.dtos.UserIdDTO;
 import com.revature.pokemondb.models.ReportArt;
-import com.revature.pokemondb.models.dtos.FanartDTO;
-import com.revature.pokemondb.models.dtos.UserIdDTO;
 import com.revature.pokemondb.repositories.ReportArtRepository;
 
 @SpringBootTest

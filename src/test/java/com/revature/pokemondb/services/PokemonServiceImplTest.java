@@ -15,8 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import com.revature.pokemondb.dtos.PokemonDTO;
 import com.revature.pokemondb.models.Pokemon;
-import com.revature.pokemondb.models.dtos.PokemonDTO;
 import com.revature.pokemondb.repositories.PokemonRepository;
 
 

@@ -1,7 +1,7 @@
 package com.revature.pokemondb.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.revature.pokemondb.models.dtos.PokemonDTO;
+import com.revature.pokemondb.dtos.PokemonDTO;
 
 import javax.persistence.*;
 

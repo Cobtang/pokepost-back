@@ -11,9 +11,9 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.revature.pokemondb.models.dtos.BannedUserDTO;
-import com.revature.pokemondb.models.dtos.UserBodyDTO;
-import com.revature.pokemondb.models.dtos.UserDTO;
+import com.revature.pokemondb.dtos.BannedUserDTO;
+import com.revature.pokemondb.dtos.UserBodyDTO;
+import com.revature.pokemondb.dtos.UserDTO;
 
 @SpringBootTest
 public class UserTest {

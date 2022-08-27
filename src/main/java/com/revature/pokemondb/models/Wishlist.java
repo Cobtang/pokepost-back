@@ -13,8 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.revature.pokemondb.models.dtos.PokemonDTO;
-import com.revature.pokemondb.models.dtos.UserIdDTO;
+import com.revature.pokemondb.dtos.PokemonDTO;
+import com.revature.pokemondb.dtos.UserIdDTO;
 
 @Entity
 @Table(name = "pokemon_wishlists", schema = "pokemon_db")

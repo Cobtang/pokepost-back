@@ -15,11 +15,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.revature.pokemondb.dtos.PokemonDTO;
 import com.revature.pokemondb.models.Ability;
 import com.revature.pokemondb.models.Move;
 import com.revature.pokemondb.models.Pokemon;
 import com.revature.pokemondb.models.PokemonMoves;
-import com.revature.pokemondb.models.dtos.PokemonDTO;
 import com.revature.pokemondb.repositories.PokemonRepository;
 import com.revature.pokemondb.utils.StringUtils;
 

@@ -20,15 +20,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.pokemondb.auth.Auth;
+import com.revature.pokemondb.dtos.BannedUserDTO;
+import com.revature.pokemondb.dtos.UserBodyDTO;
+import com.revature.pokemondb.dtos.UserDTO;
 import com.revature.pokemondb.exceptions.EmailAlreadyExistsException;
 import com.revature.pokemondb.exceptions.InvalidInputException;
 import com.revature.pokemondb.exceptions.RecordNotFoundException;
 import com.revature.pokemondb.exceptions.UsernameAlreadyExistsException;
 import com.revature.pokemondb.models.BannedUser;
 import com.revature.pokemondb.models.User;
-import com.revature.pokemondb.models.dtos.UserBodyDTO;
-import com.revature.pokemondb.models.dtos.BannedUserDTO;
-import com.revature.pokemondb.models.dtos.UserDTO;
 import com.revature.pokemondb.services.UserService;
 
 @RestController

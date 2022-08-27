@@ -17,13 +17,13 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.revature.pokemondb.dtos.UserDTO;
 import com.revature.pokemondb.exceptions.EmailAlreadyExistsException;
 import com.revature.pokemondb.exceptions.InvalidInputException;
 import com.revature.pokemondb.exceptions.RecordNotFoundException;
 import com.revature.pokemondb.exceptions.UsernameAlreadyExistsException;
 import com.revature.pokemondb.models.BannedUser;
 import com.revature.pokemondb.models.User;
-import com.revature.pokemondb.models.dtos.UserDTO;
 import com.revature.pokemondb.services.UserService;
 
 @WebMvcTest(controllers = UserController.class)

@@ -1,4 +1,4 @@
-package com.revature.pokemondb.models.dtos;
+package com.revature.pokemondb.dtos;
 
 import java.sql.Timestamp;
 import java.time.Instant;

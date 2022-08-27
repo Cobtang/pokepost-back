@@ -1,8 +1,8 @@
 package com.revature.pokemondb.services;
 
+import com.revature.pokemondb.dtos.FanartDTO;
+import com.revature.pokemondb.dtos.UserIdDTO;
 import com.revature.pokemondb.models.ReportArt;
-import com.revature.pokemondb.models.dtos.FanartDTO;
-import com.revature.pokemondb.models.dtos.UserIdDTO;
 import com.revature.pokemondb.repositories.ReportArtRepository;
 
 import java.util.ArrayList;

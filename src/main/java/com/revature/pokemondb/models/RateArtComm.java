@@ -11,8 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.revature.pokemondb.models.dtos.ArtCommDTO;
-import com.revature.pokemondb.models.dtos.UserIdDTO;
+import com.revature.pokemondb.dtos.ArtCommDTO;
+import com.revature.pokemondb.dtos.UserIdDTO;
 
 /**
  * 

@@ -10,7 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.revature.pokemondb.models.dtos.BannedUserDTO;
+import com.revature.pokemondb.dtos.BannedUserDTO;
 
 @Entity
 @Table(name = "banned_users", schema = "pokemon_db")

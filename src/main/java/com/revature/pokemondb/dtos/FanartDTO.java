@@ -1,4 +1,4 @@
-package com.revature.pokemondb.models.dtos;
+package com.revature.pokemondb.dtos;
 
 import java.util.Objects;
 
@@ -6,33 +6,30 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/** 
+/**
+ * 
  * @author Barry Norton
+ *
  */
 @Entity
-@Table(name="users", schema="pokemon_db")
-public class UserIdDTO {
+@Table(name = "pokemon_fanart", schema = "pokemon_db")
+public class FanartDTO {
 	@Id
 	private int id;
-	private String username;
-
-	/*Constructor*/
 	
-    public UserIdDTO(int id, String username) {
-		this.id = id;
-	}
-	 
-	public UserIdDTO() {
+	/*Constructors*/
+	
+	public FanartDTO() {
 		this.id = 0;
 	}
 	
-	/*Overrides*/
-	
-	@Override
-	public String toString() {
-		return "UserIdDTO [id=" + id + "]";
+	public FanartDTO(int id) {
+		super();
+		this.id = id;
 	}
 
+	/*Overrides*/
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -46,25 +43,22 @@ public class UserIdDTO {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		UserIdDTO other = (UserIdDTO) obj;
+		FanartDTO other = (FanartDTO) obj;
 		return id == other.id;
 	}
 
-	/*Getters and Setters*/
+	@Override
+	public String toString() {
+		return "FanartDTO [id=" + id + "]";
+	}
 	
+	/*Getters and Setters*/
+
 	public int getId() {
 		return id;
 	}
-	
+
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
 	}
 }

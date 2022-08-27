@@ -13,8 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.revature.pokemondb.models.dtos.FanartDTO;
-import com.revature.pokemondb.models.dtos.UserIdDTO;
+import com.revature.pokemondb.dtos.FanartDTO;
+import com.revature.pokemondb.dtos.UserIdDTO;
 
 /**
  * 

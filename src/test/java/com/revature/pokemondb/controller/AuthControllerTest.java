@@ -16,11 +16,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.revature.pokemondb.dtos.UserDTO;
 import com.revature.pokemondb.exceptions.BannedException;
 import com.revature.pokemondb.exceptions.FailedAuthenticationException;
 import com.revature.pokemondb.exceptions.RecordNotFoundException;
 import com.revature.pokemondb.models.User;
-import com.revature.pokemondb.models.dtos.UserDTO;
 import com.revature.pokemondb.services.TokenService;
 import com.revature.pokemondb.services.UserService;
 

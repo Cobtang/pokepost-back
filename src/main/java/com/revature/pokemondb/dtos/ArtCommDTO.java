@@ -1,4 +1,4 @@
-package com.revature.pokemondb.models.dtos;
+package com.revature.pokemondb.dtos;
 
 import java.util.Objects;
 
@@ -12,18 +12,18 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name = "pokemon_fanart", schema = "pokemon_db")
-public class FanartDTO {
+@Table(name = "fanart_comments", schema = "pokemon_db")
+public class ArtCommDTO {
 	@Id
 	private int id;
 	
 	/*Constructors*/
 	
-	public FanartDTO() {
+	public ArtCommDTO() {
 		this.id = 0;
 	}
 	
-	public FanartDTO(int id) {
+	public ArtCommDTO(int id) {
 		super();
 		this.id = id;
 	}
@@ -43,7 +43,7 @@ public class FanartDTO {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		FanartDTO other = (FanartDTO) obj;
+		ArtCommDTO other = (ArtCommDTO) obj;
 		return id == other.id;
 	}
 

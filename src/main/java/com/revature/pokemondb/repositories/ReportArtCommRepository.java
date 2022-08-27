@@ -2,9 +2,9 @@ package com.revature.pokemondb.repositories;
 
 import org.springframework.stereotype.Repository;
 
+import com.revature.pokemondb.dtos.ArtCommDTO;
+import com.revature.pokemondb.dtos.UserIdDTO;
 import com.revature.pokemondb.models.ReportArtComm;
-import com.revature.pokemondb.models.dtos.ArtCommDTO;
-import com.revature.pokemondb.models.dtos.UserIdDTO;
 
 import java.util.List;
 

@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import com.revature.pokemondb.dtos.FanartDTO;
 import com.revature.pokemondb.models.ArtComment;
-import com.revature.pokemondb.models.dtos.FanartDTO;
 import com.revature.pokemondb.repositories.ArtCommRepository;
 
 @SpringBootTest
