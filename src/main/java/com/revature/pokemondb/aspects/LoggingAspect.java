@@ -22,8 +22,11 @@ public class LoggingAspect {
 		// this creates a logger for that class
 		Logger logger = LoggerFactory.getLogger(joinPointClass);
 
-		logger.info("Method called: " + joinpoint.getSignature().toShortString());
-		logger.info("with arguments: " + Arrays.toString(joinpoint.getArgs()));
+		String methodName = joinpoint.getSignature().toShortString();
+		String arguments = Arrays.toString(joinpoint.getArgs());
+
+		logger.info("Method called: {}", methodName);
+		logger.info("with arguments: {}", arguments);
 
 		Object returnVal;
 
@@ -31,12 +34,10 @@ public class LoggingAspect {
 			// allowing the method to actually execute
 			returnVal = joinpoint.proceed();
 		} catch (Throwable e) {
-			logger.error(e.getClass() + ": " + e.getMessage());
-			// don't forget to still throw the throwable
-			throw e;
+			throw new Throwable (e.getClass() + ": " + e.getMessage());
 		}
 
-		logger.info("Method returned: " + returnVal);
+		logger.info("Method returned: {}", returnVal);
 		// don't forget to return the return value
 		return returnVal;
 	}
@@ -44,5 +45,5 @@ public class LoggingAspect {
     // in order to make a reusable pointcut expression,
 	// we can use a hook method (method with an empty body used to hold annotations)
 	@Pointcut("execution(* com.revature.pokemondb..*(..) )")
-	public void allPokeApp() {}
+	public void allPokeApp() {/* */}
 }
