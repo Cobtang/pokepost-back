@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
 	private BanRepository banRepo;
 	private SecurityUtils securityUtils;
 
-	public UserServiceImpl (UserRepository repo, BanRepository banRepo, SecurityUtils utils) {
+	public UserServiceImpl(UserRepository repo, BanRepository banRepo, SecurityUtils utils) {
 		this.userRepo = repo;
 		this.banRepo = banRepo;
 		this.securityUtils = utils;
@@ -34,102 +34,103 @@ public class UserServiceImpl implements UserService {
 
 	/**
 	 * Retrieves a user by its ID.
+	 * 
 	 * @param id
 	 * @return an Optional User is returned
 	 */
-	public User getUserById (Long id) throws RecordNotFoundException {
+	public User getUserById(long id) throws RecordNotFoundException {
 		Optional<User> user = userRepo.findById(id);
-		if (user.isPresent()) { return user.get();}
-		else { throw new RecordNotFoundException();}
+		if (user.isEmpty())
+			throw new RecordNotFoundException();
+		return user.get();
 	}
 
 	/**
 	 * Retrieves a user by its username.
+	 * 
 	 * @param username
 	 * @return a User is returned
 	 */
-	public User getUserByUsername (String username) throws RecordNotFoundException {
+	public User getUserByUsername(String username) throws RecordNotFoundException {
 		Optional<User> user = userRepo.findByUsername(username);
-		if (user.isPresent()) { return user.get(); }
-		else { throw new RecordNotFoundException();}
+		if (user.isEmpty())
+			throw new RecordNotFoundException();
+		return user.get();
 	}
 
 	/**
 	 * Returns all users from the database.
+	 * 
 	 * @return
 	 */
 	public List<User> getAllUsers() {
 		return userRepo.findAll();
 	}
-	
+
 	/**
 	 * A user is retrieved from the database if it matches the
 	 * username parameter. If password matches then the user is
 	 * returned. If either of these fails, null is returned.
 	 * A token should be generated for authentication.
+	 * 
 	 * @throws BannedException
 	 */
-	public User loginUser(String username, String password) throws RecordNotFoundException, FailedAuthenticationException, NoSuchAlgorithmException, BannedException {
+	public User loginUser(String username, String password)
+			throws RecordNotFoundException, FailedAuthenticationException, NoSuchAlgorithmException, BannedException {
 		Optional<User> oUser = userRepo.findByUsername(username);
-		if (oUser.isPresent()) {
-			User user = oUser.get();
-			String dbPass = user.getPassword();
-			byte[] dbSalt = user.getSalt();
-
-			String encodedPassword = password;
-			if (dbSalt != null) {
-				try {
-					encodedPassword = securityUtils.encodePassword(encodedPassword, dbSalt);
-				} catch (NoSuchAlgorithmException e) {
-					e.printStackTrace();
-					throw new NoSuchAlgorithmException();
-				}
-			}
-
-			// Password is correct
-			if (dbPass.equals(encodedPassword)) {
-
-				Optional<BannedUser> oBannedUser = banRepo.findById(user.getUserId());
-				// Is user in the ban table?
-				if (oBannedUser.isPresent()) {
-					
-					BannedUser bannedUser = oBannedUser.get();
-					Timestamp banDuration = bannedUser.getBanDuration();
-
-					// Has user's ban duration expired?
-					if (banDuration.getTime() < Timestamp.from(Instant.now()).getTime()) {
-						unBanUser (user.getUserId());
-						return user;
-					}
-
-					// Nope lol stay banned
-					else {
-						throw new BannedException();
-					}
-				}
-				return user;
-			}
-
-			// Password is incorrect
-			else {
-				throw new FailedAuthenticationException();
+		if (oUser.isEmpty())
+			throw new RecordNotFoundException();
+		User user = oUser.get();
+		String dbPass = user.getPassword();
+		byte[] dbSalt = user.getSalt();
+		String encodedPassword = password;
+		if (dbSalt != null) {
+			try {
+				encodedPassword = securityUtils.encodePassword(encodedPassword, dbSalt);
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+				throw new NoSuchAlgorithmException();
 			}
 		}
-		throw new RecordNotFoundException();
+
+		// If password does not match, then throw a FailedAuthenticationException.
+		if (!dbPass.equals(encodedPassword))
+			throw new FailedAuthenticationException();
+
+		Optional<BannedUser> oBannedUser = banRepo.findById(user.getUserId());
+
+		// Is user not in the ban table? If so, return user.
+		if (oBannedUser.isEmpty())
+			return user;
+
+		BannedUser bannedUser = oBannedUser.get();
+		Timestamp banDuration = bannedUser.getBanDuration();
+
+		// Has user's ban duration expired?
+		if (banDuration.getTime() < Timestamp.from(Instant.now()).getTime()) {
+			unBanUser(user.getUserId());
+			return user;
+		}
+
+		// Nope lol stay banned
+		throw new BannedException();
 	}
-	
+
 	/**
-	 * Inserts the user into the database. Throws an exception if username/email already exists.
+	 * Inserts the user into the database. Throws an exception if username/email
+	 * already exists.
+	 * 
 	 * @throws InvalidInputException
 	 */
-	public User registerUser(User user) throws UsernameAlreadyExistsException, EmailAlreadyExistsException, NoSuchAlgorithmException, InvalidInputException {
+	public User registerUser(User user) throws UsernameAlreadyExistsException, EmailAlreadyExistsException,
+			NoSuchAlgorithmException, InvalidInputException {
 		// Does the username already exist in the database
-		if (userRepo.existsUserByUsername(user.getUsername())) {
+		if (userRepo.existsByUsername(user.getUsername())) {
 			throw new UsernameAlreadyExistsException();
 		}
 
 		// Does user's email already exist in the database
-		if (userRepo.existsUserByEmail(user.getEmail())) {
+		if (userRepo.existsByEmail(user.getEmail())) {
 			throw new EmailAlreadyExistsException();
 		}
 
@@ -156,7 +157,9 @@ public class UserServiceImpl implements UserService {
 
 	/**
 	 * Updates the user. Throws a RecordNotFound exception if the user is
-	 * not in the database. Returns the same object that was passed in if successful.
+	 * not in the database. Returns the same object that was passed in if
+	 * successful.
+	 * 
 	 * @param user
 	 * @return
 	 * @throws RecordNotFoundException
@@ -164,126 +167,102 @@ public class UserServiceImpl implements UserService {
 	 * @throws EmailAlreadyExistsException
 	 * @throws UsernameAlreadyExistsException
 	 */
-	public User updateUser (User user) throws RecordNotFoundException, NoSuchAlgorithmException, EmailAlreadyExistsException, UsernameAlreadyExistsException {
-		if (userRepo.existsById(user.getUserId())) {
-			Optional<User> oUser = userRepo.findById(user.getUserId());
-			if (oUser.isEmpty()) throw new RecordNotFoundException();
-			User dbUser = oUser.get();
-
-			// Username
-			// Make sure username is not the same, empty, or null.
-			if (!user.getUsername().equals(dbUser.getUsername()) && !user.getUsername().equals("") && user.getUsername() != null) {
-				if (!userRepo.existsUserByUsername(user.getUsername())) {
-					dbUser.setUsername(user.getUsername());
-				}
-				else {
-					throw new UsernameAlreadyExistsException();
-				}
-			}
-
-			// Email
-			// Make sure email is not the same, empty, or null.
-			if (!user.getEmail().equals(dbUser.getEmail()) && !user.getEmail().equals("") && user.getEmail() != null) {
-				if (!userRepo.existsUserByEmail(user.getEmail())) {
-					dbUser.setEmail(user.getEmail());
-				}
-				else {
-					throw new EmailAlreadyExistsException();
-				}
-			}
-
-			// Password
-			// Make sure password is not the same, empty, or null.
-			if (!user.getPassword().equals(dbUser.getPassword()) && !user.getPassword().equals("") && user.getPassword() != null) {
-				byte[] salt = securityUtils.generateSalt();
-				dbUser.setSalt(salt);
-				String encodedPassword = securityUtils.encodePassword(user.getPassword(), dbUser.getSalt());
-				dbUser.setPassword(encodedPassword);
-			}
-
-			// Role
-			// Make sure role is not the same, empty, or null.
-			if (!user.getRole().equals(dbUser.getRole()) && !user.getRole().equals("") && user.getRole() != null) dbUser.setRole(user.getRole());
-
-			// Update user in DB
-			userRepo.save (dbUser);
-			return dbUser;
-		}
-		else {
+	public User updateUser(User user) throws RecordNotFoundException, NoSuchAlgorithmException,
+			EmailAlreadyExistsException, UsernameAlreadyExistsException {
+		Optional<User> oUser = userRepo.findById(user.getUserId());
+		if (oUser.isEmpty())
 			throw new RecordNotFoundException();
+		User dbUser = oUser.get();
+		// Username
+		// If usernames are different and if it already exists in the database, throw an
+		// UsernameAlreadyExistsException.
+		if (!dbUser.getUsername().equals(user.getUsername()) && userRepo.existsByUsername(user.getUsername())) {
+			throw new UsernameAlreadyExistsException();
 		}
+
+		// Email
+		// If emails are different and if it already exists in the database, throw an
+		// EmailAlreadyExistsException.
+		if (!dbUser.getEmail().equals(user.getEmail()) && userRepo.existsByEmail(user.getEmail())) {
+			throw new EmailAlreadyExistsException();
+		}
+
+		// Password
+		// Make sure password is not the same, empty, or null.
+		if (!user.getPassword().equals(dbUser.getPassword()) && !user.getPassword().equals("")
+				&& user.getPassword() != null) {
+			byte[] salt = securityUtils.generateSalt();
+			dbUser.setSalt(salt);
+			String encodedPassword = securityUtils.encodePassword(user.getPassword(), dbUser.getSalt());
+			dbUser.setPassword(encodedPassword);
+		}
+
+		// Role
+		// Make sure role is not the same, empty, or null.
+		if (!user.getRole().equals(dbUser.getRole()) && !user.getRole().equals("") && user.getRole() != null)
+			dbUser.setRole(user.getRole());
+
+		// Update user in DB
+		userRepo.save(dbUser);
+		return dbUser;
 	}
 
 	/**
 	 * Removes the user from the database. Throws a RecordNotFound
 	 * exception if the user is not in the database. Returns the
 	 * same object that was passed in if successful.
+	 * 
 	 * @param user
 	 * @return
 	 * @throws RecordNotFoundException
 	 */
-	public User deleteUser (User user) throws RecordNotFoundException {
-		if (userRepo.existsById(user.getUserId())) {
-			Optional<User> oUser = userRepo.findById(user.getUserId());
-			if (oUser.isEmpty()) throw new RecordNotFoundException();
-			User dbUser = oUser.get();
-
-			userRepo.delete(dbUser);
-			return dbUser;
-		}
-		else {
+	public User deleteUser(User user) throws RecordNotFoundException {
+		Optional<User> oUser = userRepo.findById(user.getUserId());
+		if (oUser.isEmpty())
 			throw new RecordNotFoundException();
-		}
+		User dbUser = oUser.get();
+		userRepo.delete(dbUser);
+		return dbUser;
 	}
-	
+
 	/**
 	 * Inserts the user into the ban table to indicate
 	 * a user has been banned.
+	 * 
 	 * @throws UsernameAlreadyExistsException
 	 * @throws RecordNotFoundException
 	 */
 	public User banUser(BannedUser bannedUser) throws UsernameAlreadyExistsException, RecordNotFoundException {
 		Optional<User> oUser = userRepo.findById(bannedUser.getUserId());
-		if (oUser.isPresent()) {
-			User dbUser = oUser.get();
+		if (oUser.isEmpty())
+			throw new RecordNotFoundException();
+		User dbUser = oUser.get();
 
-			// If user is not already banned
-			if (!banRepo.existsById(dbUser.getUserId())) {
-				banRepo.save(bannedUser);
-				return dbUser;
-			}
-			else {
-				throw new UsernameAlreadyExistsException();
-			}
+		// If user is already banned throw a UsernameAlreadyExistsException
+		if (banRepo.existsById(dbUser.getUserId()))
+			throw new UsernameAlreadyExistsException();
 
-		}
-
-		// Cannot find username in users table
-		throw new RecordNotFoundException();
+		banRepo.save(bannedUser);
+		return dbUser;
 	}
-	
+
 	/**
 	 * Removes a user from the ban table to indicate
 	 * a user has been unbanned.
+	 * 
 	 * @throws RecordNotFoundException
 	 */
-	public User unBanUser(Long id) throws RecordNotFoundException {
+	public User unBanUser(long id) throws RecordNotFoundException {
 		Optional<BannedUser> oBannedUser = banRepo.findById(id);
-
-		// If user is in the ban table
-		if (oBannedUser.isPresent()) {
-			Optional<User> oUser = userRepo.findById(id);
-
-			// If user is in the users table
-			if (oUser.isPresent()) {
-				banRepo.delete(oBannedUser.get());
-				return oUser.get();
-			}
-			banRepo.delete(oBannedUser.get());
-			return null;
-		}
-		else {
+		if (oBannedUser.isEmpty())
 			throw new RecordNotFoundException();
-		}
+		Optional<User> oUser = userRepo.findById(id);
+
+		// If user is not in the users table
+		if (oUser.isEmpty())
+			throw new RecordNotFoundException();
+
+		banRepo.delete(oBannedUser.get());
+		return oUser.get();
 	}
 }

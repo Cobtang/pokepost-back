@@ -13,21 +13,24 @@ import com.revature.pokemondb.models.BannedUser;
 import com.revature.pokemondb.models.User;
 
 public interface UserService {
-	public User getUserById (Long id) throws RecordNotFoundException;
-	
-	public User getUserByUsername (String username) throws RecordNotFoundException;
+	public User getUserById(long id) throws RecordNotFoundException;
+
+	public User getUserByUsername(String username) throws RecordNotFoundException;
 
 	public List<User> getAllUsers();
 
-	public User loginUser(String username, String password) throws FailedAuthenticationException, NoSuchAlgorithmException, RecordNotFoundException, BannedException;
-	
-	public User registerUser(User user) throws UsernameAlreadyExistsException, EmailAlreadyExistsException, NoSuchAlgorithmException, InvalidInputException;
+	public User loginUser(String username, String password)
+			throws FailedAuthenticationException, NoSuchAlgorithmException, RecordNotFoundException, BannedException;
 
-	public User updateUser(User user) throws RecordNotFoundException, NoSuchAlgorithmException, EmailAlreadyExistsException, UsernameAlreadyExistsException;
-	
+	public User registerUser(User user) throws UsernameAlreadyExistsException, EmailAlreadyExistsException,
+			NoSuchAlgorithmException, InvalidInputException;
+
+	public User updateUser(User user) throws RecordNotFoundException, NoSuchAlgorithmException,
+			EmailAlreadyExistsException, UsernameAlreadyExistsException;
+
 	public User deleteUser(User user) throws RecordNotFoundException;
 
 	public User banUser(BannedUser bannedUser) throws UsernameAlreadyExistsException, RecordNotFoundException;
-	
-	public User unBanUser(Long id) throws RecordNotFoundException;
+
+	public User unBanUser(long id) throws RecordNotFoundException;
 }
