@@ -22,7 +22,7 @@ public class PostDTO {
 	private Set<PostDTO> comments;
 	private UserMini author;
 	private Set<UserMini> users;
-	private Timestamp createdDate = new Timestamp(System.currentTimeMillis());
+	private Timestamp postedAt = new Timestamp(System.currentTimeMillis());
 	
 	/**
 	 * Convert Post into a DTO
@@ -37,6 +37,6 @@ public class PostDTO {
 			this.comments.add(new PostDTO(comment));
 		}
 		this.author = post.getAuthor();
-		setCreatedDate(post.getCreatedDate());
+		setPostedAt(post.getPostedAt());
 	}
 }

@@ -45,7 +45,7 @@ public class Post {
 	@JoinTable(name = "liked_posts", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 	private Set<UserMini> users;
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Timestamp createdDate = new Timestamp(System.currentTimeMillis());
+	private Timestamp postedAt = new Timestamp(System.currentTimeMillis());
 	@Column(name = "is_flagged")
 	private Boolean isFlagged;
 
@@ -60,6 +60,6 @@ public class Post {
 
 		this.author = dto.getAuthor();
 		this.users = dto.getUsers();
-		this.createdDate = dto.getCreatedDate();
+		this.postedAt = dto.getPostedAt();
 	}
 }
