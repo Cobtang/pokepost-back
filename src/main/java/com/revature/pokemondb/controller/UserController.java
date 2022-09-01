@@ -4,13 +4,14 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -36,6 +37,7 @@ import com.revature.pokemondb.services.UserService;
 @RequestMapping(path = "/user")
 public class UserController {
 	private UserService userService;
+	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	public UserController(UserService userServ) {
 		this.userService = userServ;
@@ -45,7 +47,7 @@ public class UserController {
 	public ResponseEntity<String> optionsRequest() {
 		return ResponseEntity
 				.ok()
-				.allow(HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE, HttpMethod.PATCH,
+				.allow(HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE,
 						HttpMethod.OPTIONS)
 				.build();
 	}
@@ -55,9 +57,10 @@ public class UserController {
 	 * 
 	 * @param json
 	 * @return
+	 * @throws RecordNotFoundException
 	 */
     @GetMapping("/{id}")
-	public ResponseEntity<UserDTO> getUser (@PathVariable String id) {
+	public ResponseEntity<UserDTO> getUser (@PathVariable String id) throws RecordNotFoundException {
 		User user;
 		try {
 			// Is this an id?
@@ -68,11 +71,10 @@ public class UserController {
 				user = userService.getUserByUsername(String.valueOf(id));
 			} catch (RecordNotFoundException e1) {
 				e1.printStackTrace();
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+				throw new RecordNotFoundException(e);
 			}
 		} catch (RecordNotFoundException e) {
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			throw new RecordNotFoundException(e);
 		}
 
 		UserDTO userDTO = new UserDTO(user);
@@ -105,19 +107,23 @@ public class UserController {
 	/**
 	 * @param map
 	 * @return ResponseEntity<User>
+	 * @throws UsernameAlreadyExistsException
+	 * @throws NoSuchAlgorithmException
+	 * @throws EmailAlreadyExistsException
 	 */
 	@PostMapping("/")
-	public ResponseEntity<UserDTO> createUser (@RequestBody UserBodyDTO userBody) {
+	public ResponseEntity<UserDTO> createUser (@RequestBody UserBodyDTO userBody) throws UsernameAlreadyExistsException, NoSuchAlgorithmException, EmailAlreadyExistsException {
 		User newUser = new User(userBody);
 		try {
 			newUser = userService.registerUser (newUser);
 			UserDTO userDTO = new UserDTO(newUser);
 			return ResponseEntity.status(HttpStatus.CREATED).body(userDTO);
-		} catch (UsernameAlreadyExistsException | EmailAlreadyExistsException | NoSuchAlgorithmException e) {
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
-		} catch (InvalidInputException e) {
-			e.printStackTrace();
+		} catch (UsernameAlreadyExistsException e) {
+			throw new UsernameAlreadyExistsException("Username " + userBody.getUsername() + " already exists!", e);
+		} catch (EmailAlreadyExistsException e) {
+			throw new EmailAlreadyExistsException("Email " + userBody.getEmail() + " already exists!", e);
+		} catch (NoSuchAlgorithmException | InvalidInputException e) {
+			logger.error (e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 	}
@@ -125,55 +131,28 @@ public class UserController {
 	/**
 	 * @param user
 	 * @return ResponseEntity<User>
+	 * @throws UsernameAlreadyExistsException
+	 * @throws EmailAlreadyExistsException
+	 * @throws RecordNotFoundException
 	 */
 	@PutMapping("/")
 	@Auth(requireSelfAction = true)
-	public ResponseEntity<UserDTO> updateUserDetails (@RequestBody UserBodyDTO userBody) {
+	public ResponseEntity<UserDTO> updateUserDetails (@RequestBody UserBodyDTO userBody) throws UsernameAlreadyExistsException, EmailAlreadyExistsException, RecordNotFoundException {
 		User user = new User(userBody);
 		try {
 			User updatedUser = userService.updateUser(user);
-			if (updatedUser != null) {
-				UserDTO userDTO = new UserDTO(updatedUser);
-				return ResponseEntity.status(HttpStatus.OK).body(userDTO);
-			}
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			UserDTO userDTO = new UserDTO(updatedUser);
+			return ResponseEntity.status(HttpStatus.OK).body(userDTO);
+		} catch (UsernameAlreadyExistsException e) {
+			throw new UsernameAlreadyExistsException("Username " + userBody.getUsername() + " already exists!", e);
+		} catch (EmailAlreadyExistsException e) {
+			throw new EmailAlreadyExistsException("Email " + userBody.getEmail() + " already exists!", e);
 		} catch (RecordNotFoundException e) {
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			throw new RecordNotFoundException(e);
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			logger.error (e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-		} catch (UsernameAlreadyExistsException | EmailAlreadyExistsException e) {
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
-		}
-	}
-
-	/**
-	 * @param user
-	 * @return ResponseEntity<User>
-	 */
-	@PatchMapping
-	@Auth(requireSelfAction = true)
-	public ResponseEntity<UserDTO> patchUserDetails (@RequestBody UserBodyDTO userBody) {
-		User user = new User(userBody);
-		try {
-			User updatedUser = userService.updateUser(user);
-			if (updatedUser != null) {
-				UserDTO userDTO = new UserDTO(updatedUser);
-				return ResponseEntity.status(HttpStatus.OK).body(userDTO);
-			}
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-		} catch (RecordNotFoundException e) {
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-		} catch (UsernameAlreadyExistsException | EmailAlreadyExistsException e) {
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
-		}
+		} 
 	}
 
 	/**

@@ -10,8 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.revature.pokemondb.dtos.PokemonDTO;
-import com.revature.pokemondb.dtos.UserDTO;
-import com.revature.pokemondb.dtos.UserIdDTO;
+import com.revature.pokemondb.models.UserMini;
 import com.revature.pokemondb.models.Pokemon;
 import com.revature.pokemondb.models.User;
 import com.revature.pokemondb.models.Wishlist;
@@ -25,12 +24,12 @@ public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
         value = "INSERT INTO pokemon_wishlists (pokemon_id, user_id)" +
                 "VALUES (:pokemon_id, :user_id)", nativeQuery = true 
     )
-    public void saveWishlist(@Param("pokemon_id") Pokemon pokemon_id, @Param("user_id") User user_id);
+    public void saveWishlist(@Param("pokemon_id") Pokemon pokemonId, @Param("user_id") User userId);
 
-    public List<Wishlist> findByUser(UserIdDTO id);
+    public List<Wishlist> findByUser(UserMini id);
 
     @Modifying
-    public void deleteByPokemonAndUser(PokemonDTO pokemonid, UserIdDTO userid);
+    public void deleteByPokemonAndUser(PokemonDTO pokemonid, UserMini userid);
 
 
     public Wishlist findByUserIdAndPokemonId(Integer userId, Integer pokemonId);

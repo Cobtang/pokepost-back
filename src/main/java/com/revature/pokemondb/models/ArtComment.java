@@ -1,7 +1,7 @@
 package com.revature.pokemondb.models;
 
 import java.sql.Date;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -14,13 +14,19 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.revature.pokemondb.dtos.FanartDTO;
-import com.revature.pokemondb.dtos.UserIdDTO;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 /**
  * 
  * @author Barry Norton
  *
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "fanart_comments", schema = "pokemon_db")
 public class ArtComment {
@@ -32,7 +38,7 @@ public class ArtComment {
 	private FanartDTO fanartId;
 	@ManyToOne
 	@JoinColumn(name = "user_id")
-	private UserIdDTO author;
+	private UserMini author;
 	@Column(name = "comment_content")
 	private String content;
 	private Integer likes;
@@ -40,32 +46,7 @@ public class ArtComment {
 	@Column(name = "is_flagged")
 	private Boolean isFlagged;
 	@Column(name="posted_at")
-	private Date postDate;
-	
-	/*Constructors*/
-	public ArtComment() {
-		this.id = 0;
-		this.fanartId = null;
-		this.author = null;
-		this.content = "";
-		this.likes = 0;
-		this.reports = 0;
-		this.isFlagged = false;
-		this.postDate = Date.valueOf(LocalDate.now());
-	}
-	
-	public ArtComment(int id, FanartDTO fanartId, UserIdDTO author, String content, Integer likes, Integer reports,
-			Boolean isFlagged, Date postDate) {
-		super();
-		this.id = id;
-		this.fanartId = fanartId;
-		this.author = author;
-		this.content = content;
-		this.likes = likes;
-		this.reports = reports;
-		this.isFlagged = isFlagged;
-		this.postDate = postDate;
-	}
+	private Date postDate = new Date(Instant.EPOCH.getEpochSecond());
 	
 	/*Overrides*/
 	
@@ -113,11 +94,11 @@ public class ArtComment {
 		this.fanartId = fanartId;
 	}
 
-	public UserIdDTO getAuthor() {
+	public UserMini getAuthor() {
 		return author;
 	}
 
-	public void setAuthor(UserIdDTO author) {
+	public void setAuthor(UserMini author) {
 		this.author = author;
 	}
 

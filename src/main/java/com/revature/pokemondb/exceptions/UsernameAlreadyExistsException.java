@@ -13,4 +13,7 @@ public class UsernameAlreadyExistsException extends Exception {
     public UsernameAlreadyExistsException (String username) {
         super ("Username [" + username + "] already exists in the database! ");
     }
+
+    public UsernameAlreadyExistsException(String string, Exception e) {
+    }
 }

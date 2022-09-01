@@ -11,19 +11,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.revature.pokemondb.dtos.UserBodyDTO;
 import com.revature.pokemondb.dtos.UserDTO;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 /**
  * @author Colby Tang
  */
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "users", schema = "pokemon_db")
 public class User {
@@ -56,7 +56,6 @@ public class User {
 		this.password = password;
 	}
 
-	@Autowired
 	public User(Long userId, String username, String email, String password) {
 		this.userId = userId;
 		this.username = username;

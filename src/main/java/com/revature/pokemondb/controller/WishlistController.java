@@ -15,28 +15,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.revature.pokemondb.models.Pokemon;
-import com.revature.pokemondb.models.User;
 import com.revature.pokemondb.models.Wishlist;
-import com.revature.pokemondb.services.PokemonService;
-import com.revature.pokemondb.services.UserService;
-import com.revature.pokemondb.services.UserServiceImpl;
 import com.revature.pokemondb.services.WishlistService;
 
 @RestController
 @RequestMapping(path = "/wishlist")
 public class WishlistController {
-    private UserService userService;
-    private PokemonService pokemonService;
     private ObjectMapper objectMapper;
     private WishlistService wishlistService;
 
-    public WishlistController(PokemonService pokemonService, ObjectMapper objectMapper, WishlistService wishlistService,
-            UserService userService) {
-        this.pokemonService = pokemonService;
+    public WishlistController(ObjectMapper objectMapper, WishlistService wishlistService) {
         this.objectMapper = objectMapper;
         this.wishlistService = wishlistService;
-        this.userService = userService;
     }
 
     @GetMapping("/")
@@ -79,6 +69,6 @@ public class WishlistController {
         Integer pokemonid = parameters.get("pokemonid");
         Integer userid = parameters.get("userid");
         wishlistService.deletePokemonFromWishlist(pokemonid, userid);
-        return new ResponseEntity<String>("Pokemon is free", HttpStatus.OK);
+        return new ResponseEntity<>("Pokemon is free", HttpStatus.OK);
     }
 }

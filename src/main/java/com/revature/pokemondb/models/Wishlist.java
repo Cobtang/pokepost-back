@@ -14,8 +14,14 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.revature.pokemondb.dtos.PokemonDTO;
-import com.revature.pokemondb.dtos.UserIdDTO;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "pokemon_wishlists", schema = "pokemon_db")
 public class Wishlist {
@@ -24,62 +30,14 @@ public class Wishlist {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     
-    @OneToOne(targetEntity = UserIdDTO.class, fetch = FetchType.EAGER)
+    @OneToOne(targetEntity = UserMini.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
-    private UserIdDTO user;
+    private UserMini user;
 
     @ManyToOne()
     @JoinColumn(name = "pokemon_id")
     private PokemonDTO pokemon;
 
     private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
-
-    public Wishlist() {
-    }
-
-    public Wishlist(long id, UserIdDTO user, PokemonDTO pokemon, Timestamp createdAt) {
-        this.id = id;
-        this.pokemon = pokemon;
-        this.user = user;
-        this.createdAt = createdAt;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public PokemonDTO getPokemon() {
-        return pokemon;
-    }
-
-    public void setPokemon(PokemonDTO pokemon) {
-        this.pokemon = pokemon;
-    }
-
-    public UserIdDTO getUser() {
-        return user;
-    }
-
-    public void setUser(UserIdDTO user) {
-        this.user = user;
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    @Override
-    public String toString() {
-        return "Wishlist [createdAt=" + createdAt + ", id=" + id + ", Pokemon=" + pokemon
-                + ", User=" + user + "]";
-    }
 
 }

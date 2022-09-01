@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import com.revature.pokemondb.PokemondbApplication;
 import com.revature.pokemondb.exceptions.BannedException;
 import com.revature.pokemondb.exceptions.EmailAlreadyExistsException;
 import com.revature.pokemondb.exceptions.FailedAuthenticationException;
@@ -261,7 +260,7 @@ class UserServiceTest {
     void testRegisterUsernameException() throws UsernameAlreadyExistsException {
         // Mock setup
         User mockUser = new User(1l, "colbytang", "ctang@email.com", "pass");
-        Mockito.when(userRepo.existsUserByUsername(mockUser.getUsername())).thenReturn(true);
+        Mockito.when(userRepo.existsByUsername(mockUser.getUsername())).thenReturn(true);
 
         // Call the method to test
         assertThrows(UsernameAlreadyExistsException.class, 
@@ -277,7 +276,7 @@ class UserServiceTest {
     void testRegisterEmailException() throws EmailAlreadyExistsException {
         // Mock setup
         User mockUser = new User(1l, "colbytang", "ctang@email.com", "pass");
-        Mockito.when(userRepo.existsUserByEmail(mockUser.getEmail())).thenReturn(true);
+        Mockito.when(userRepo.existsByEmail(mockUser.getEmail())).thenReturn(true);
 
         // Call the method to test
         assertThrows(EmailAlreadyExistsException.class, 
@@ -357,7 +356,7 @@ class UserServiceTest {
         mockDbUser.setUsername("user");
         Mockito.when(userRepo.existsById(mockUser.getUserId())).thenReturn(true);
         Mockito.when(userRepo.findById(mockUser.getUserId())).thenReturn(Optional.of(mockDbUser));
-        Mockito.when(userRepo.existsUserByEmail(mockUser.getEmail())).thenReturn(true);
+        Mockito.when(userRepo.existsByEmail(mockUser.getEmail())).thenReturn(true);
         assertThrows(EmailAlreadyExistsException.class, 
         () -> userService.updateUser(mockUser));
     }
@@ -378,7 +377,7 @@ class UserServiceTest {
         mockDbUser.setUsername("user2");
         Mockito.when(userRepo.existsById(mockUser.getUserId())).thenReturn(true);
         Mockito.when(userRepo.findById(mockUser.getUserId())).thenReturn(Optional.of(mockDbUser));
-        Mockito.when(userRepo.existsUserByUsername(mockUser.getUsername())).thenReturn(true);
+        Mockito.when(userRepo.existsByUsername(mockUser.getUsername())).thenReturn(true);
         assertThrows(UsernameAlreadyExistsException.class, 
         () -> userService.updateUser(mockUser));
     }
@@ -475,7 +474,7 @@ class UserServiceTest {
     void banUserCannotFind() throws RecordNotFoundException {
         User mockUser = new User();
         BannedUser bannedUser = new BannedUser(mockUser.getUserId(), Timestamp.from(Instant.now().plusSeconds(500l)), "Reason");
-        Mockito.when(userRepo.existsUserByUsername(mockUser.getUsername())).thenReturn(false);
+        Mockito.when(userRepo.existsByUsername(mockUser.getUsername())).thenReturn(false);
         assertThrows(RecordNotFoundException.class, 
         () -> userService.banUser(bannedUser));
     }
