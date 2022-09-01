@@ -16,7 +16,7 @@ Administrators can moderate comments and fanart and even ban users from posting.
 ## Getting Started
 
 ### Dependencies
-* Java 8
+* Java 11
 * Spring Boot
 * PostgreSQL
 
