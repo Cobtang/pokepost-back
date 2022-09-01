@@ -13,11 +13,14 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>pokemondb</name>
 	<description>A Pokemon Database with fan features.</description>
+	
 	<properties>
-		<java.version>1.8</java.version>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
 		<sonar.organization>Cobtang</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
+	
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
