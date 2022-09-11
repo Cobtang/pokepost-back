@@ -70,7 +70,7 @@ public class AuthAspect {
 		}
 
 		final String username = userDtoOpt.get().getUsername();
-		final Long userId = userDtoOpt.get().getUserId();
+		final Long userId = userDtoOpt.get().getId();
 
 		if (stopBannedUsers && tokenService.isUserBanned(userId)) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Not authorized. User has been banned.");

@@ -69,8 +69,8 @@ public class FanartControllerTest {
     @Test
     void getIdLimiters() throws Exception {
         String idLimiters = "1/4";
-        Mockito.when(fanartService.getLowestID()).thenReturn(1);
-        Mockito.when(fanartService.getHighestID()).thenReturn(4);
+        Mockito.when(fanartService.getLowestID()).thenReturn(1l);
+        Mockito.when(fanartService.getHighestID()).thenReturn(4l);
 
         mockMvc.perform(get("/fanart/info/"))
         .andExpect(status().isOk())
@@ -79,8 +79,8 @@ public class FanartControllerTest {
 
     @Test
     void getIdLimitersNegative() throws Exception {
-        Mockito.when(fanartService.getLowestID()).thenReturn(-1);
-        Mockito.when(fanartService.getHighestID()).thenReturn(4);
+        Mockito.when(fanartService.getLowestID()).thenReturn(-1l);
+        Mockito.when(fanartService.getHighestID()).thenReturn(4l);
 
         mockMvc.perform(get("/fanart/info/"))
         .andExpect(status().isNotFound());

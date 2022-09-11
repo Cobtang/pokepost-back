@@ -1,5 +1,7 @@
 package com.revature.pokemondb.dtos;
 
+import java.util.Optional;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -18,7 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "pokemon", schema = "pokemon_db")
+@Table(name = "pokemon")
 public class PokemonDTO {
 	@Id
 	@Column

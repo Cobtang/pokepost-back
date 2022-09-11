@@ -1,6 +1,7 @@
 package com.revature.pokemondb.dtos;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,7 +23,7 @@ public class PostDTO {
 	private Set<PostDTO> comments;
 	private UserMini author;
 	private Set<UserMini> users;
-	private Timestamp postedAt = new Timestamp(System.currentTimeMillis());
+	private LocalDateTime postedAt;
 	
 	/**
 	 * Convert Post into a DTO

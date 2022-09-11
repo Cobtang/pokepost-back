@@ -1,9 +1,11 @@
 package com.revature.pokemondb.models;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -116,21 +118,34 @@ public class PokemonTest {
     @Test
     void pokemonTypes() {
         Pokemon pokemon = new Pokemon();
-        String[] expectedTypes = new String[] {"electric", "ground"};
-        pokemon.setTypes(expectedTypes);
-        assertEquals(pokemon.getTypes(), expectedTypes);
+        pokemon.setPrimaryType("electric");
+        pokemon.setSecondaryType("ground");
+        assertEquals("electric", pokemon.getPrimaryType());
+        assertEquals("ground", pokemon.getSecondaryType());
     }
 
     @Test
     void pokemonBaseStats() {
         Pokemon pokemon = new Pokemon();
-        Map<String, Integer> expectedBaseStats = new HashMap<String, Integer>();
-        expectedBaseStats.put("hp", 45);
-        expectedBaseStats.put("attack", 49);
-        expectedBaseStats.put("defense", 49);
-        expectedBaseStats.put("speed", 45);
-        expectedBaseStats.put("special-attack", 65);
-        expectedBaseStats.put("special-defense", 65);
+        PokemonStats expectedBaseStats = new PokemonStats();
+
+        int expectedHP = 45;
+        expectedBaseStats.setHp(expectedHP);
+
+        int expectedAttack = 49;
+        expectedBaseStats.setAttack(expectedAttack);
+
+        int expectedDefense = 49;
+        expectedBaseStats.setDefense(expectedDefense);
+
+        int expectedSpeed = 45;
+        expectedBaseStats.setSpeed(expectedSpeed);
+
+        int expectedSpecialAttack = 65;
+        expectedBaseStats.setSpecialAttack(expectedSpecialAttack);
+
+        int expectedSpecialDefense = 65;
+        expectedBaseStats.setSpecialDefense(expectedSpecialDefense);
         pokemon.setBaseStats(expectedBaseStats);
         assertEquals(pokemon.getBaseStats(), expectedBaseStats);
     }
@@ -170,8 +185,8 @@ public class PokemonTest {
     @Test
     void pokemonEvolution() {
         Pokemon pokemon = new Pokemon();
-        List<String[]> expectedEvolution = new ArrayList<>();
-        expectedEvolution.add(new String[] {"Pokemon", "URL"});
+        Set<EvolutionChain> expectedEvolution = new HashSet<>();
+        expectedEvolution.add(new EvolutionChain(1, "name", "url"));
         pokemon.setEvolutionChain(expectedEvolution);
         assertEquals(pokemon.getEvolutionChain(), expectedEvolution);
     }
@@ -195,7 +210,7 @@ public class PokemonTest {
     @Test
     void pokemonAbilities() {
         Pokemon pokemon = new Pokemon();
-        List<Ability> expectedAbilities = new ArrayList<>();
+        Set<Ability> expectedAbilities = new HashSet<>();
         Ability ability = new Ability("name", "url", 2, true);
         expectedAbilities.add(ability);
         pokemon.setAbilities(expectedAbilities);
@@ -203,11 +218,11 @@ public class PokemonTest {
         
         Ability emptyAbility = new Ability();
         emptyAbility.setName("abilityName");
-        emptyAbility.setURL("url");
+        emptyAbility.setUrl("url");
         emptyAbility.setSlot(1);
         emptyAbility.setHidden(true);
         assertEquals("abilityName", emptyAbility.getName());
-        assertEquals("url", emptyAbility.getURL());
+        assertEquals("url", emptyAbility.getUrl());
         assertEquals(1, emptyAbility.getSlot());
         assertEquals(true, emptyAbility.isHidden());
     }
@@ -222,7 +237,7 @@ public class PokemonTest {
         expectedMoves.setLevelMoves(levelMoves);
         pokemon.setMoves(expectedMoves);
         assertEquals (pokemon.getMoves(), expectedMoves);
-        assertEquals ("url", move.getURL());
+        assertEquals ("url", move.getUrl());
         assertEquals (2, move.getLevelLearnedAt());
     }
 

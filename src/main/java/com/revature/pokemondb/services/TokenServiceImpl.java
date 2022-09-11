@@ -45,7 +45,7 @@ public class TokenServiceImpl implements TokenService {
             long now = System.currentTimeMillis();
 
             jws = Jwts.builder()
-                .setId(String.valueOf(user.getUserId()))
+                .setId(String.valueOf(user.getId()))
                 .setSubject(user.getUsername())
                 .claim("role", user.getRole())
                 .setIssuer("pokepost")

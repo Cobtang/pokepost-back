@@ -35,12 +35,12 @@ public class FanartService {
 	 * This will be used to determine the lower limit for accessing fanart
 	 * @return an id
 	 */
-	public int getLowestID() {
+	public Long getLowestID() {
 		List<Fanart> fanart = artRepo.findByIsFlaggedOrderById(false);
 		if (fanart != null) {
 			return fanart.get(0).getId();
 		} else {
-			return -1;
+			return -1l;
 		}
 	}
 	
@@ -49,12 +49,12 @@ public class FanartService {
 	 * This will be used to determine the upper limit for accessing fanart
 	 * @return an id
 	 */
-	public int getHighestID() {
+	public Long getHighestID() {
 		List<Fanart> fanart = artRepo.findByIsFlaggedOrderByIdDesc(false);
 		if (fanart != null) {
 			return fanart.get(0).getId();
 		} else {
-			return -1;
+			return -1l;
 		}
 	}
 	

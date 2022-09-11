@@ -12,12 +12,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BannedUserDTO {
-	private Long userId = 0l; 
+	private Long id; 
 	private Timestamp banDuration;
 	private String banReason;
 
     public BannedUserDTO(BannedUser user) {
-        this.userId = user.getUserId();
+        this.id = user.getId();
         this.banDuration = user.getBanDuration();
         this.banReason = user.getBanReason();
     }

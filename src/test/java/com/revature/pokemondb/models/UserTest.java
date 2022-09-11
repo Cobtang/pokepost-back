@@ -35,10 +35,10 @@ public class UserTest {
     @Test
     void setUserDTO () {
         UserDTO userDTO = new UserDTO();
-        userDTO.setUserId(1l);
+        userDTO.setId(1l);
         userDTO.setUsername("user");
         userDTO.setEmail("email");
-        assertEquals(1l, userDTO.getUserId());
+        assertEquals(1l, userDTO.getId());
         assertEquals("user", userDTO.getUsername());
         assertEquals("email", userDTO.getEmail());
     }
@@ -53,13 +53,13 @@ public class UserTest {
         String expectedRole = "user";
         String expectedToken = "token";
         UserBodyDTO user = new UserBodyDTO();
-        user.setUserId(expectedId);
+        user.setId(expectedId);
         user.setUsername(expectedUsername);
         user.setEmail(expectedEmail);
         user.setPassword(expectedPassword);
         user.setToken(expectedToken);
         user.setSalt(expectedSalt);
-        assertEquals(user.getUserId(), expectedId);
+        assertEquals(user.getId(), expectedId);
         assertEquals(user.getUsername(), expectedUsername);
         assertEquals(user.getEmail(), expectedEmail);
         assertEquals(user.getPassword(), expectedPassword);
@@ -79,7 +79,7 @@ public class UserTest {
         Long expectedId = 1l;
         User user = new User(expectedId);
         assertNotNull(user);
-        assertEquals(user.getUserId(), expectedId);
+        assertEquals(user.getId(), expectedId);
     }
 
     @Test
@@ -112,7 +112,7 @@ public class UserTest {
         String expectedPassword = "pass";
         User user = new User(expectedId, expectedUsername, expectedEmail, expectedPassword);
         assertNotNull(user);
-        assertEquals(user.getUserId(), expectedId);
+        assertEquals(user.getId(), expectedId);
         assertEquals(user.getUsername(), expectedUsername);
         assertEquals(user.getEmail(), expectedEmail);
         assertEquals(user.getPassword(), expectedPassword);
@@ -127,7 +127,7 @@ public class UserTest {
         byte[] expectedSalt = "pass".getBytes();
         User user = new User(expectedId, expectedUsername, expectedEmail, expectedPassword, expectedSalt);
         assertNotNull(user);
-        assertEquals(user.getUserId(), expectedId);
+        assertEquals(user.getId(), expectedId);
         assertEquals(user.getUsername(), expectedUsername);
         assertEquals(user.getEmail(), expectedEmail);
         assertEquals(user.getPassword(), expectedPassword);
@@ -145,7 +145,7 @@ public class UserTest {
         User user = new User(expectedId, expectedUsername, expectedEmail, expectedPassword, expectedSalt);
         user.setRole(expectedRole);
         assertNotNull(user);
-        assertEquals(user.getUserId(), expectedId);
+        assertEquals(user.getId(), expectedId);
         assertEquals(user.getUsername(), expectedUsername);
         assertEquals(user.getEmail(), expectedEmail);
         assertEquals(user.getPassword(), expectedPassword);
@@ -163,7 +163,7 @@ public class UserTest {
         User user = new User(userDTO);
         user.setRole(expectedRole);
         assertNotNull(user);
-        assertEquals(user.getUserId(), expectedId);
+        assertEquals(user.getId(), expectedId);
         assertEquals(user.getUsername(), expectedUsername);
         assertEquals(user.getEmail(), expectedEmail);
         assertEquals(user.getRole(), expectedRole);
@@ -193,7 +193,7 @@ public class UserTest {
 
         User user = new User(userMap);
         assertNotNull(user);
-        assertEquals(user.getUserId(), expectedId);
+        assertEquals(user.getId(), expectedId);
         assertEquals(user.getUsername(), expectedUsername);
         assertEquals(user.getEmail(), expectedEmail);
         assertEquals(user.getPassword(), expectedPassword);
@@ -227,8 +227,8 @@ public class UserTest {
     void bannedUserDTO () {
         BannedUser bannedUser = new BannedUser();
         BannedUserDTO dto = new BannedUserDTO(bannedUser);
-        dto.setUserId(3l);
-        assertEquals(3l, dto.getUserId());
+        dto.setId(3l);
+        assertEquals(3l, dto.getId());
         
         Timestamp now = Timestamp.from(Instant.now());
         dto.setBanDuration(now);
@@ -242,7 +242,7 @@ public class UserTest {
         BannedUserDTO dtoNull = new BannedUserDTO();
         dtoNull.setBanDuration(null);
         dtoNull.setBanReason(null);
-        dtoNull.setUserId(null);
+        dtoNull.setId(null);
         assertNotEquals(dto, dto2);
         assertNotEquals(dto2, dto);
         assertNotEquals(dtoNull, dto2);
@@ -260,7 +260,7 @@ public class UserTest {
         assertNotEquals(dtoNull, dto2);
         assertNotEquals(dto2, dtoNull);
 
-        dto2.setUserId(3l);
+        dto2.setId(3l);
         assertEquals(dto, dto2);
         assertEquals(dto2, dto);
         assertNotEquals(dtoNull, dto2);

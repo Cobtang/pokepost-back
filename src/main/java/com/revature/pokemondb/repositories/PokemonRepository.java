@@ -6,8 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.revature.pokemondb.dtos.PokemonDTO;
+import com.revature.pokemondb.models.Pokemon;
 
 @Repository
-public interface PokemonRepository extends JpaRepository<PokemonDTO, Integer> {
-	public Optional<PokemonDTO> findByName(String name);
+public interface PokemonRepository extends JpaRepository<Pokemon, Integer> {
+	public Optional<Pokemon> findByName(String name);
 }

@@ -12,8 +12,15 @@ import javax.persistence.Table;
 
 import com.revature.pokemondb.dtos.BannedUserDTO;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
-@Table(name = "banned_users", schema = "pokemon_db")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "banned_users")
 public class BannedUser {
     @Id
 	@Column(name="user_id", updatable=false, insertable=false)
@@ -29,37 +36,25 @@ public class BannedUser {
     @GeneratedValue(strategy = GenerationType.AUTO)
 	private Timestamp bannedAt = new Timestamp(System.currentTimeMillis());
 
-    public BannedUser() {
-        userId = 0l;
-        banDuration = Timestamp.from(Instant.now());
-        banReason = "";
-    }
-
     public BannedUser(Long userId) {
         this.userId = userId;
     }
 
-    public BannedUser(Long userId, Timestamp banDuration, String banReason) {
-        this.userId = userId;
-        this.banDuration = banDuration;
-        this.banReason = banReason;
-    }
-
     public BannedUser(BannedUserDTO dto) {
-        this.userId = dto.getUserId();
+        this.userId = dto.getId();
         this.banDuration = dto.getBanDuration();
         this.banReason = dto.getBanReason();
     }
 
     public BannedUser(User user) {
-        this.userId = user.getUserId();
+        this.userId = user.getId();
     }
 
-    public Long getUserId() {
+    public Long getId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setId(Long userId) {
         this.userId = userId;
     }
 

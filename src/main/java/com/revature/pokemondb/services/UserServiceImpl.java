@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService {
 		if (!dbPass.equals(encodedPassword))
 			throw new FailedAuthenticationException();
 
-		Optional<BannedUser> oBannedUser = banRepo.findById(user.getUserId());
+		Optional<BannedUser> oBannedUser = banRepo.findById(user.getId());
 
 		// Is user not in the ban table? If so, return user.
 		if (oBannedUser.isEmpty())
@@ -108,7 +108,7 @@ public class UserServiceImpl implements UserService {
 
 		// Has user's ban duration expired?
 		if (banDuration.getTime() < Timestamp.from(Instant.now()).getTime()) {
-			unBanUser(user.getUserId());
+			unBanUser(user.getId());
 			return user;
 		}
 
@@ -169,7 +169,7 @@ public class UserServiceImpl implements UserService {
 	 */
 	public User updateUser(User user) throws RecordNotFoundException, NoSuchAlgorithmException,
 			EmailAlreadyExistsException, UsernameAlreadyExistsException {
-		Optional<User> oUser = userRepo.findById(user.getUserId());
+		Optional<User> oUser = userRepo.findById(user.getId());
 		if (oUser.isEmpty())
 			throw new RecordNotFoundException();
 		User dbUser = oUser.get();
@@ -217,7 +217,7 @@ public class UserServiceImpl implements UserService {
 	 * @throws RecordNotFoundException
 	 */
 	public User deleteUser(User user) throws RecordNotFoundException {
-		Optional<User> oUser = userRepo.findById(user.getUserId());
+		Optional<User> oUser = userRepo.findById(user.getId());
 		if (oUser.isEmpty())
 			throw new RecordNotFoundException();
 		User dbUser = oUser.get();
@@ -233,13 +233,13 @@ public class UserServiceImpl implements UserService {
 	 * @throws RecordNotFoundException
 	 */
 	public User banUser(BannedUser bannedUser) throws UsernameAlreadyExistsException, RecordNotFoundException {
-		Optional<User> oUser = userRepo.findById(bannedUser.getUserId());
+		Optional<User> oUser = userRepo.findById(bannedUser.getId());
 		if (oUser.isEmpty())
 			throw new RecordNotFoundException();
 		User dbUser = oUser.get();
 
 		// If user is already banned throw a UsernameAlreadyExistsException
-		if (banRepo.existsById(dbUser.getUserId()))
+		if (banRepo.existsById(dbUser.getId()))
 			throw new UsernameAlreadyExistsException();
 
 		banRepo.save(bannedUser);

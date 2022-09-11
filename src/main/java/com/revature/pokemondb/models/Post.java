@@ -1,6 +1,7 @@
 package com.revature.pokemondb.models;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,6 +17,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import com.revature.pokemondb.dtos.PostDTO;
 import com.revature.pokemondb.models.UserMini;
@@ -44,8 +47,9 @@ public class Post {
 	@ManyToMany
 	@JoinTable(name = "liked_posts", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 	private Set<UserMini> users;
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Timestamp postedAt = new Timestamp(System.currentTimeMillis());
+	@CreationTimestamp
+	@Column(updatable = false)
+	private LocalDateTime postedAt;
 	@Column(name = "is_flagged")
 	private Boolean isFlagged;
 

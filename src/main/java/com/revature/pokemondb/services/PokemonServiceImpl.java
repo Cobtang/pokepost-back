@@ -17,9 +17,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.pokemondb.dtos.PokemonDTO;
 import com.revature.pokemondb.models.Ability;
+import com.revature.pokemondb.models.EvolutionChain;
 import com.revature.pokemondb.models.Move;
 import com.revature.pokemondb.models.Pokemon;
 import com.revature.pokemondb.models.PokemonMoves;
+import com.revature.pokemondb.models.PokemonStats;
 import com.revature.pokemondb.repositories.PokemonRepository;
 import com.revature.pokemondb.utils.StringUtils;
 
@@ -85,8 +87,8 @@ public class PokemonServiceImpl implements PokemonService{
      * 
      */
     public PokemonDTO getReferencePokemon(int id) {
-        Optional<PokemonDTO> pokemon = pokeRepo.findById(id);
-        if (pokemon.isPresent()) {return pokemon.get();}
+        Optional<Pokemon> pokemon = pokeRepo.findById(id);
+        if (pokemon.isPresent()) {return new PokemonDTO(pokemon.get());}
         return null;
     }
 
@@ -94,8 +96,8 @@ public class PokemonServiceImpl implements PokemonService{
      * 
      */
     public PokemonDTO getReferencePokemon(String pokemonName) {
-        Optional<PokemonDTO> pokemon = pokeRepo.findByName(pokemonName);
-        if (pokemon.isPresent()) {return pokemon.get();}
+        Optional<Pokemon> pokemon = pokeRepo.findByName(pokemonName);
+        if (pokemon.isPresent()) {return new PokemonDTO(pokemon.get());}
         return null;
     }
 
@@ -104,8 +106,7 @@ public class PokemonServiceImpl implements PokemonService{
      */
     public Pokemon createPokemon (int pokemonId) {
         Pokemon pokemon = createPokemonObject(getPokemonJSON(pokemonId));
-        PokemonDTO dto = new PokemonDTO(pokemon);
-        pokeRepo.save(dto);
+        pokeRepo.save(pokemon);
         return pokemon;
     }
 
@@ -114,8 +115,7 @@ public class PokemonServiceImpl implements PokemonService{
      */
     public Pokemon createPokemon (String pokemonName) {
         Pokemon pokemon = createPokemonObject(getPokemonJSON(pokemonName));
-        PokemonDTO dto = new PokemonDTO(pokemon);
-        pokeRepo.save(dto);
+        pokeRepo.save(pokemon);
         return pokemon;
     }
 
@@ -126,111 +126,78 @@ public class PokemonServiceImpl implements PokemonService{
         List<PokemonDTO> pokemonList = new ArrayList<>();
         // Retrieve pokemon one by one
         for (Integer id : ids) {
-            Optional<PokemonDTO> pokemon = pokeRepo.findById(id);
-            if (pokemon.isPresent())
-                pokemonList.add(pokemon.get());
+            Optional<Pokemon> oPokemon = pokeRepo.findById(id);
+            if (oPokemon.isPresent())
+                pokemonList.add(new PokemonDTO(oPokemon.get()));
         }
         return pokemonList;
     }
 
     public PokemonDTO createReferencePokemon (String pokemonName) {
-        PokemonDTO dto = null;
-        Optional<PokemonDTO> oDto = pokeRepo.findByName(pokemonName);
-        if (oDto.isPresent()) {
-            dto = oDto.get();
-            return dto;
+        Optional<Pokemon> oPokemon = pokeRepo.findByName(pokemonName);
+        if (oPokemon.isPresent()) {
+            return new PokemonDTO(oPokemon.get());
         }
-
-        try {
-            String pokemonJSON = getPokemonJSON (pokemonName);
-            String pokemonSpeciesJSON = getPokemonSpeciesJSON(pokemonName);
-            dto = createReferencePokemonObject (pokemonJSON, pokemonSpeciesJSON);
-            pokeRepo.save(dto);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return dto;
+        return new PokemonDTO(createPokemon(pokemonName));
     }
 
     public PokemonDTO createReferencePokemon (Integer pokemonId) {
-        PokemonDTO dto = null;
-        Optional<PokemonDTO> oDto = pokeRepo.findById(pokemonId);
-        if (oDto.isPresent()) {
-            dto = oDto.get();
-            return dto;
+        Optional<Pokemon> oPokemon = pokeRepo.findById(pokemonId);
+        if (oPokemon.isPresent()) {
+            return new PokemonDTO(oPokemon.get());
         }
-
-        try {
-            String pokemonJSON = getPokemonJSON (pokemonId);
-            String pokemonSpeciesJSON = getPokemonSpeciesJSON(pokemonId);
-            dto = createReferencePokemonObject (pokemonJSON, pokemonSpeciesJSON);
-            pokeRepo.save(dto);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return dto;
-    }
-
-    public PokemonDTO createReferencePokemonObject (String pokemonJSON, String pokemonSpeciesJSON) throws JsonMappingException, JsonProcessingException {
-        JsonNode pokemonRoot = objMapper.readTree(pokemonJSON);
-        // Id
-        int id = pokemonRoot.get("id").asInt();
-
-        // Name
-        String name = pokemonRoot.get("name").asText();
-
-        // Image URL
-        String imageURL = pokemonRoot.get("sprites").get("other").get("official-artwork").get("front_default").asText();
-
-        JsonNode speciesRoot = objMapper.readTree(pokemonSpeciesJSON);
-        // Generation
-        String generation = speciesRoot.get("generation").get("name").asText();
-        String number = generation.split("-")[1];
-        int genNum = StringUtils.getNumberFromRomanNumeral(number);
-
-        PokemonDTO pokemonDTO = new PokemonDTO (id, name, imageURL, genNum);
-
-        return pokemonDTO;
+        return new PokemonDTO(createPokemon(pokemonId));
     }
 
     /**
      * Create a pokemon object using four different API calls from PokeAPI.
      */
     public Pokemon createPokemonObject (String pokemonJSON) {
-        Pokemon pokemon = null;
+        Pokemon pokemon = new Pokemon();
         try {
             // ---------------------------Pokemon JSON--------------------------------------
             JsonNode pokemonRoot = objMapper.readTree(pokemonJSON);
             
             // Id
             int id = pokemonRoot.get("id").asInt();
+            pokemon.setId(id);
 
             // Name
             String name = pokemonRoot.get("name").asText();
+            pokemon.setName(name);
 
             // Height
             int height = pokemonRoot.get("height").asInt();
+            pokemon.setHeight(height);
 
             // Weight
             int weight = pokemonRoot.get("weight").asInt();
+            pokemon.setWeight(weight);
 
             // Types
             String[] types = getTypes(pokemonRoot.get("types"));
+            pokemon.setPrimaryType(types[0]);
+            if (types.length > 1) pokemon.setSecondaryType(types[1]);
 
             // Base Stats
-            Map<String, Integer> baseStats = getBaseStats(pokemonRoot.get("stats"));
+            PokemonStats baseStats = getBaseStats(id, pokemonRoot.get("stats"));
+            pokemon.setBaseStats(baseStats);
 
             // Image URL
-            String imageURL = pokemonRoot.get("sprites").get("other").get("official-artwork").get("front_default").asText();
+            String imageUrl = pokemonRoot.get("sprites").get("other").get("official-artwork").get("front_default").asText();
+            pokemon.setImageUrl(imageUrl);
 
             // Base Experience
             int baseExperience = pokemonRoot.get("base_experience").asInt();
+            pokemon.setBaseExperience(baseExperience);
 
             // Abilities
-            List<Ability> abilities = getAbilities(pokemonRoot.get("abilities"));
+            Set<Ability> abilities = getAbilities(pokemonRoot.get("abilities"));
+            pokemon.setAbilities(abilities);
             
             // Moves
             PokemonMoves moves = getPokemonMoves (pokemonRoot.get("moves"));
+            pokemon.setMoves(moves);
 
             // ----------------------------Species JSON-----------------------------------------
             String speciesJSON = getPokemonSpeciesJSON(id);
@@ -240,12 +207,15 @@ public class PokemonServiceImpl implements PokemonService{
             String generation = speciesRoot.get("generation").get("name").asText();
             String number = generation.split("-")[1];
             int genNum = StringUtils.getNumberFromRomanNumeral(number);
+            pokemon.setGeneration(genNum);
 
             // Category
             String category = speciesRoot.get("genera").get(7).get("genus").asText();
+            pokemon.setCategory(category);
             
             // Description
             String description = getDescription(speciesRoot.get("flavor_text_entries"));
+            pokemon.setDescription(description);
 
             // ---------------------------------Evolution JSON-------------------------------
             String evolutionURL = objMapper.readTree(speciesJSON).get("evolution_chain").get("url").asText();
@@ -253,7 +223,8 @@ public class PokemonServiceImpl implements PokemonService{
             JsonNode evolutionRoot = objMapper.readTree(evolutionJSON);
 
             // Evolution Chain
-            List<String[]> evolutionChain = getEvolutionChain(evolutionRoot.get("chain"));
+            Set<EvolutionChain> evolutionChain = getEvolutionChain(evolutionRoot.get("chain"));
+            pokemon.setEvolutionChain(evolutionChain);
 
             // ----------------------------Location JSON-----------------------------
             String locationsURL = objMapper.readTree(pokemonJSON).get("location_area_encounters").asText();
@@ -262,22 +233,7 @@ public class PokemonServiceImpl implements PokemonService{
 
             // Locations/Versions
             List<Map<String,String>> locationVersions = getLocationVersions(locationRoot);
-
-            pokemon = new Pokemon (id, name,
-                height,
-                weight,
-                types,
-                baseStats,
-                imageURL,
-                genNum,
-                category,
-                description,
-                evolutionChain,
-                locationVersions,
-                baseExperience,
-                abilities,
-                moves
-            );
+            pokemon.setLocationVersions(locationVersions);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -304,12 +260,34 @@ public class PokemonServiceImpl implements PokemonService{
      * @param node
      * @return
      */
-    private Map<String, Integer> getBaseStats (JsonNode node) {
-        Map<String, Integer> baseStats = new HashMap<>();
+    private PokemonStats getBaseStats (int id, JsonNode node) {
+        PokemonStats baseStats = new PokemonStats();
+        baseStats.setId(id);
         for (JsonNode jsonNode : node) {
             String baseStatName = jsonNode.get("stat").get("name").asText();
-            int baseStatNumber = jsonNode.get("base_stat").asInt();
-            baseStats.put(baseStatName, baseStatNumber);
+            int value = jsonNode.get("base_stat").asInt();
+            switch (baseStatName) {
+                case "hp":
+                    baseStats.setHp(value);
+                    break;
+                case "attack":
+                    baseStats.setAttack(value);
+                    break;
+                case "defense":
+                    baseStats.setDefense(value);
+                    break;
+                case "special-attack":
+                    baseStats.setSpecialAttack(value);
+                    break;
+                case "special-defense":
+                    baseStats.setSpecialDefense(value);
+                    break;
+                case "speed":
+                    baseStats.setSpeed(value);
+                    break;
+                default:
+                    break;
+            }
         }
         return baseStats;
     }
@@ -319,8 +297,8 @@ public class PokemonServiceImpl implements PokemonService{
      * @param node
      * @return
      */
-    private List<Ability> getAbilities (JsonNode node) {
-        List<Ability> abilities = new ArrayList<>();
+    private Set<Ability> getAbilities (JsonNode node) {
+        Set<Ability> abilities = new HashSet<>();
         for (JsonNode jsonNode : node) {
             Ability newAbility = new Ability(
                 jsonNode.get("ability").get("name").asText(),
@@ -348,7 +326,7 @@ public class PokemonServiceImpl implements PokemonService{
             Move move = new Move();
 
             move.setName(jsonNode.get("move").get("name").asText());
-            move.setURL(jsonNode.get("move").get("url").asText());
+            move.setUrl(jsonNode.get("move").get("url").asText());
 
             for (JsonNode versionGroupDetailsNode : jsonNode.get("version_group_details")) {
                 move.setTypeOfMove(versionGroupDetailsNode.get("move_learn_method").get("name").asText());
@@ -405,13 +383,17 @@ public class PokemonServiceImpl implements PokemonService{
      * @param evolutionChainNode
      * @return
      */
-    private List<String[]> getEvolutionChain (JsonNode evolutionChainNode) {
-        List<String[]> evolutionChain = new ArrayList<>();
+    private Set<EvolutionChain> getEvolutionChain (JsonNode evolutionChainNode) {
+        Set<EvolutionChain> evolutionChain = new HashSet<>();
         do {
+            EvolutionChain chain = new EvolutionChain();
+            chain.setId(evolutionChainNode.get("id").asInt());
             String speciesName = evolutionChainNode.get("species").get("name").asText();
             speciesName = StringUtils.convertFromURIFormat(speciesName);
+            chain.setName(speciesName);
             String speciesURL = evolutionChainNode.get("species").get("url").asText();
-            evolutionChain.add(new String[]{speciesName, speciesURL});
+            chain.setUrl(speciesURL);
+            evolutionChain.add(chain);
             evolutionChainNode = evolutionChainNode.get("evolves_to").get(0);
         } while (evolutionChainNode != null);
 

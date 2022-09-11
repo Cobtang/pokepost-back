@@ -14,17 +14,24 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * 
  * @author Barry Norton
  *
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name = "pokemon_fanart", schema = "pokemon_db")
+@Table(name = "pokemon_fanart")
 public class Fanart {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+	private Long id;
 	@ManyToOne
 	@JoinColumn(name = "pokemon_id")
 	private Pokemon pokemon;
@@ -41,34 +48,6 @@ public class Fanart {
 	private Boolean isFlagged;
 	@Column(name="uploaded_at")
 	private Date postDate;
-	
-	/*Constructors*/
-	
-	public Fanart() {
-		this.id = 0;
-		this.pokemon = null;
-		this.author = null;
-		this.url = "";
-		this.likes = 0;
-		this.reports = 0;
-		this.isFlagged = false;
-		this.postDate = Date.valueOf(LocalDate.now());
-	}
-	
-	public Fanart(int id, Pokemon pokemon, UserMini author, String title, String tags, String url, int likes, int reports,
-			Boolean isFlagged, Date postDate, List<ArtComment> comments) {
-		super();
-		this.id = id;
-		this.pokemon = pokemon;
-		this.author = author;
-		this.title = title;
-		this.tags = tags;
-		this.url = url;
-		this.likes = likes;
-		this.reports = reports;
-		this.isFlagged = isFlagged;
-		this.postDate = postDate;
-	}
 	
 	/*Overrides*/
 	
@@ -99,69 +78,5 @@ public class Fanart {
 		return "Fanart [id=" + id + ", pokemon=" + pokemon + ", author=" + author + ", title=" + title + ", tags="
 				+ tags + ", url=" + url + ", likes=" + likes + ", reports=" + reports + ", isFlagged=" + isFlagged
 				+ ", postDate=" + postDate + "]";
-	}
-
-	
-	/*Getters and Setters*/
-	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public Pokemon getPokemon() {
-		return pokemon;
-	}
-	public void setPokemon(Pokemon pokemon) {
-		this.pokemon = pokemon;
-	}
-	public UserMini getAuthor() {
-		return author;
-	}
-	public void setAuthor(UserMini author) {
-		this.author = author;
-	}
-	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	public String getTags() {
-		return tags;
-	}
-	public void setTags(String tags) {
-		this.tags = tags;
-	}
-	public String getUrl() {
-		return url;
-	}
-	public void setUrl(String url) {
-		this.url = url;
-	}
-	public int getLikes() {
-		return likes;
-	}
-	public void setLikes(int likes) {
-		this.likes = likes;
-	}
-	public int getReports() {
-		return reports;
-	}
-	public void setReports(int reports) {
-		this.reports = reports;
-	}
-	public Boolean getIsFlagged() {
-		return isFlagged;
-	}
-	public void setIsFlagged(Boolean isFlagged) {
-		this.isFlagged = isFlagged;
-	}
-	public Date getPostDate() {
-		return postDate;
-	}
-	public void setPostDate(Date postDate) {
-		this.postDate = postDate;
 	}
 }

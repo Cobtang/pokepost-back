@@ -15,7 +15,7 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="users", schema="pokemon_db")
+@Table(name="users")
 public class UserMini {
 	@Id
 	private Long id;
@@ -26,7 +26,7 @@ public class UserMini {
 	}
 
 	public UserMini(User user) {
-		this.id = user.getUserId();
+		this.id = user.getId();
 		this.username = user.getUsername();
 	}
 }

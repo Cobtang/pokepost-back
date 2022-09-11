@@ -137,7 +137,7 @@ class UserControllerTest {
     void testCreateUserSuccess() throws JsonProcessingException, Exception {
         User mockUser = new User();
 		User mockUserWithId = new User();
-        mockUserWithId.setUserId(1l);
+        mockUserWithId.setId(1l);
         Mockito.when(userService.registerUser(mockUser)).thenReturn(mockUserWithId);
         UserDTO userDTO = new UserDTO(mockUserWithId);
         mockMvc.perform(post("/user/")
@@ -188,7 +188,7 @@ class UserControllerTest {
     @Test
 	void updateUserSuccess() throws JsonProcessingException, Exception {
 		User mockUser = new User();
-		mockUser.setUserId(1l);
+		mockUser.setId(1l);
 		
 		Mockito.when(userService.updateUser(mockUser)).thenReturn(mockUser);
 		
@@ -207,7 +207,7 @@ class UserControllerTest {
     @Test
     void updateUserNotFound() throws JsonProcessingException, Exception {
 		User mockUser = new User();
-		mockUser.setUserId(1l);
+		mockUser.setId(1l);
 		
 		Mockito.when(userService.updateUser(mockUser)).thenThrow(RecordNotFoundException.class);
 		
@@ -224,7 +224,7 @@ class UserControllerTest {
     @Test
     void updateUserWrongAlgorithm() throws JsonProcessingException, Exception {
 		User mockUser = new User();
-		mockUser.setUserId(1l);
+		mockUser.setId(1l);
 		
 		Mockito.when(userService.updateUser(mockUser)).thenThrow(NoSuchAlgorithmException.class);
 		
@@ -241,7 +241,7 @@ class UserControllerTest {
     @Test
     void updateUserEmailAlreadyExistsException() throws JsonProcessingException, Exception {
 		User mockUser = new User();
-		mockUser.setUserId(1l);
+		mockUser.setId(1l);
 		
 		Mockito.when(userService.updateUser(mockUser)).thenThrow(EmailAlreadyExistsException.class);
 		
@@ -258,7 +258,7 @@ class UserControllerTest {
     @Test
 	void updateUserNull() throws JsonProcessingException, Exception {
 		User mockUser = new User();
-		mockUser.setUserId(1l);
+		mockUser.setId(1l);
 		
 		Mockito.when(userService.updateUser(mockUser)).thenReturn(null);
 		
@@ -275,7 +275,7 @@ class UserControllerTest {
     @Test
 	void patchUserSuccess() throws JsonProcessingException, Exception {
 		User mockUser = new User();
-		mockUser.setUserId(1l);
+		mockUser.setId(1l);
 		
 		Mockito.when(userService.updateUser(mockUser)).thenReturn(mockUser);
 		
@@ -294,7 +294,7 @@ class UserControllerTest {
     @Test
     void patchUserNotFound() throws JsonProcessingException, Exception {
 		User mockUser = new User();
-		mockUser.setUserId(1l);
+		mockUser.setId(1l);
 		
 		Mockito.when(userService.updateUser(mockUser)).thenThrow(RecordNotFoundException.class);
 		
@@ -311,7 +311,7 @@ class UserControllerTest {
     @Test
     void patchUserWrongAlgorithm() throws JsonProcessingException, Exception {
 		User mockUser = new User();
-		mockUser.setUserId(1l);
+		mockUser.setId(1l);
 		
 		Mockito.when(userService.updateUser(mockUser)).thenThrow(NoSuchAlgorithmException.class);
 		
@@ -328,7 +328,7 @@ class UserControllerTest {
     @Test
     void patchUserEmailAlreadyExistsException() throws JsonProcessingException, Exception {
 		User mockUser = new User();
-		mockUser.setUserId(1l);
+		mockUser.setId(1l);
 		
 		Mockito.when(userService.updateUser(mockUser)).thenThrow(EmailAlreadyExistsException.class);
 		
@@ -345,7 +345,7 @@ class UserControllerTest {
     @Test
 	void patchUserNull() throws JsonProcessingException, Exception {
 		User mockUser = new User();
-		mockUser.setUserId(1l);
+		mockUser.setId(1l);
 		
 		Mockito.when(userService.updateUser(mockUser)).thenReturn(null);
 		
@@ -363,7 +363,7 @@ class UserControllerTest {
     @Test
 	void deleteUserSuccess() throws JsonProcessingException, Exception {
 		User mockUser = new User();
-		mockUser.setUserId(1l);
+		mockUser.setId(1l);
 		
 		Mockito.when(userService.deleteUser(mockUser)).thenReturn(mockUser);
 		
@@ -382,7 +382,7 @@ class UserControllerTest {
     @Test
 	void deleteUserNotFound() throws JsonProcessingException, Exception {
 		User mockUser = new User();
-		mockUser.setUserId(1l);
+		mockUser.setId(1l);
 		
 		Mockito.when(userService.deleteUser(mockUser)).thenThrow(RecordNotFoundException.class);
 		
@@ -400,7 +400,7 @@ class UserControllerTest {
     @Test
 	void deleteUserNull() throws JsonProcessingException, Exception {
 		User mockUser = new User();
-		mockUser.setUserId(1l);
+		mockUser.setId(1l);
 		
 		Mockito.when(userService.deleteUser(mockUser)).thenReturn(null);
 		
@@ -418,7 +418,7 @@ class UserControllerTest {
     void banUser() throws JsonProcessingException, Exception {
         BannedUser banBody = new BannedUser(1l);
 		User mockUserWithId = new User();
-        mockUserWithId.setUserId(1l);
+        mockUserWithId.setId(1l);
         Mockito.when(userService.banUser(banBody)).thenReturn(mockUserWithId);
         UserDTO userDTO = new UserDTO(mockUserWithId);
         mockMvc.perform(post("/user/ban")
@@ -436,7 +436,7 @@ class UserControllerTest {
     void banUserAlreadyBanned() throws UsernameAlreadyExistsException, Exception {
         BannedUser banBody = new BannedUser(1l);
 		User mockUserWithId = new User();
-        mockUserWithId.setUserId(1l);
+        mockUserWithId.setId(1l);
         Mockito.when(userService.banUser(banBody)).thenThrow(UsernameAlreadyExistsException.class);
         mockMvc.perform(post("/user/ban")
             .contentType(MediaType.APPLICATION_JSON)
@@ -452,7 +452,7 @@ class UserControllerTest {
     @Test
     void unBanUser() throws JsonProcessingException, Exception {
 		User mockUserWithId = new User();
-        mockUserWithId.setUserId(1l);
+        mockUserWithId.setId(1l);
         Mockito.when(userService.unBanUser(1l)).thenReturn(mockUserWithId);
         UserDTO userDTO = new UserDTO(mockUserWithId);
         mockMvc.perform(post("/user/unban/1"))
@@ -468,7 +468,7 @@ class UserControllerTest {
     @Test
     void unBanUserNull() throws RecordNotFoundException, JsonProcessingException, Exception {
 		User mockUserWithId = new User();
-        mockUserWithId.setUserId(1l);
+        mockUserWithId.setId(1l);
         Mockito.when(userService.unBanUser(1l)).thenReturn(null);
         mockMvc.perform(post("/user/unban/1"))
             .andExpect(status().isNotFound());
@@ -481,7 +481,7 @@ class UserControllerTest {
     @Test
     void unBanUserNotFound() throws RecordNotFoundException, JsonProcessingException, Exception {
 		User mockUserWithId = new User();
-        mockUserWithId.setUserId(1l);
+        mockUserWithId.setId(1l);
         Mockito.when(userService.unBanUser(1l)).thenThrow(RecordNotFoundException.class);
         mockMvc.perform(post("/user/unban/1"))
             .andExpect(status().isNotFound());
@@ -494,7 +494,7 @@ class UserControllerTest {
     @Test
     void unBanUserWrongFormat() throws NumberFormatException, JsonProcessingException, Exception {
 		User mockUserWithId = new User();
-        mockUserWithId.setUserId(1l);
+        mockUserWithId.setId(1l);
         Mockito.when(userService.unBanUser(1l)).thenThrow(NumberFormatException.class);
         mockMvc.perform(post("/user/unban/1"))
             .andExpect(status().isNotFound());

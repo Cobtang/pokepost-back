@@ -32,7 +32,7 @@ public class FanartServiceTest {
     public void testGetLowestIdNull() {
     	/*Variables*/
     	List<Fanart> mockdata = null;
-    	int expected = -1,
+    	Long expected = -1l,
     		actual;
     	
     	/*Mocks*/
@@ -50,11 +50,11 @@ public class FanartServiceTest {
     	/*Variables*/
     	List<Fanart> mockdata = new ArrayList<Fanart>();
     	Fanart mockentry = new Fanart();
-    	int expected = 1,
+    	Long expected = 1l,
     		actual;
     	
     	/*Setup Variables*/
-    	mockentry.setId(1);
+    	mockentry.setId(1l);
     	mockdata.add(mockentry);
     	
     	/*Mocks*/
@@ -73,7 +73,7 @@ public class FanartServiceTest {
     public void testGetHighestIdNull() {
     	/*Variables*/
     	List<Fanart> mockdata = null;
-    	int expected = -1,
+    	Long expected = -1l,
     		actual;
     	
     	/*Mocks*/
@@ -91,11 +91,11 @@ public class FanartServiceTest {
     	/*Variables*/
     	List<Fanart> mockdata = new ArrayList<Fanart>();
     	Fanart mockentry = new Fanart();
-    	int expected = 1,
+    	Long expected = 1l,
     		actual;
     	
     	/*Setup Variables*/
-    	mockentry.setId(1);
+    	mockentry.setId(1l);
     	mockdata.add(mockentry);
     	
     	/*Mocks*/
@@ -174,7 +174,7 @@ public class FanartServiceTest {
         		actual;
     	
     	/*Setup Variables*/
-    	mockentry.setId(1);
+    	mockentry.setId(1l);
     	mockdata.add(mockentry);
     	expected.add(mockentry);
     	
@@ -216,7 +216,7 @@ public class FanartServiceTest {
         		actual;
     	
     	/*Setup Variables*/
-    	mockentry.setId(1);
+    	mockentry.setId(1l);
     	mockdata.add(mockentry);
     	expected.add(mockentry);
     	
@@ -258,7 +258,7 @@ public class FanartServiceTest {
         		actual;
     	
     	/*Setup Variables*/
-    	mockentry.setId(1);
+    	mockentry.setId(1l);
     	mockdata.add(mockentry);
     	expected.add(mockentry);
     	
@@ -300,7 +300,7 @@ public class FanartServiceTest {
         		actual;
     	
     	/*Setup Variables*/
-    	mockentry.setId(1);
+    	mockentry.setId(1l);
     	mockdata.add(mockentry);
     	expected.add(mockentry);
     	
@@ -386,7 +386,7 @@ public class FanartServiceTest {
         		actual;
     	
     	/*Setup Variables*/
-    	mockentry.setId(1);
+    	mockentry.setId(1l);
     	mockentry.setTags(mocktag);
     	mockdata.add(mockentry);
     	expected.add(mockentry);
@@ -431,7 +431,7 @@ public class FanartServiceTest {
         		actual;
     	
     	/*Setup Variables*/
-    	mockentry.setId(1);
+    	mockentry.setId(1l);
     	mockentry.setTitle(mocktitle);
     	mockdata.add(mockentry);
     	expected.add(mockentry);
@@ -476,7 +476,7 @@ public class FanartServiceTest {
         		actual;
     	
     	/*Setup Variables*/
-    	mockentry.setId(1);
+    	mockentry.setId(1l);
     	mockdata.add(mockentry);
     	expected.add(mockentry);
     	

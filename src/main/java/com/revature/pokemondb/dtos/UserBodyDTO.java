@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserBodyDTO {
-	private Long userId = 0l; 
+	private Long id; 
 	private String username;
 	private String email;
 	private String role;
@@ -23,7 +23,7 @@ public class UserBodyDTO {
 	private byte[] salt;
 
 	public UserBodyDTO (User user) {
-		this.userId = user.getUserId();
+		this.id = user.getId();
 		this.username = user.getUsername();
 		this.email = user.getEmail();
 		this.salt = user.getSalt();
@@ -32,7 +32,7 @@ public class UserBodyDTO {
 	}
 
 	public UserBodyDTO (UserDTO user) {
-		this.userId = user.getUserId();
+		this.id = user.getId();
 		this.username = user.getUsername();
 		this.email = user.getEmail();
 		this.role = user.getRole();

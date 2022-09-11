@@ -16,8 +16,9 @@ spring:
     activate:
       on-profile: dev
   jpa:
+    generate-ddl: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     database-platform: org.hibernate.dialect.H2Dialect
     defer-datasource-initialization: true
     open-in-view: true # Turn off OSIV warning
@@ -35,10 +36,12 @@ spring:
   h2:
     console.enabled: true
   output:
-    ansi.enabled: never # turn on colors in Spring console
+    ansi.enabled: always # turn on colors in Spring console
 logging:
   file.name: logs/application-debug.log
   level:
     web: debug
+    '[org.hibernate.sql]': debug
+    '[org.hibernate.type.descriptor.sql.BasicBinder]': TRACE
 jwt.secret: ${JWT_SECRET}
 frontend.url: ${POKEPOST_FRONTEND_URL}

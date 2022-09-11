@@ -62,13 +62,13 @@ class TokenServiceTest {
 	public void validateTokenSuccess() {
         long now = System.currentTimeMillis();
         User mockUser = new User();
-        mockUser.setUserId(1l);
+        mockUser.setId(1l);
         mockUser.setUsername("colbytang");
         mockUser.setPassword("pass");
         mockUser.setEmail("ctang@email.com");
         mockUser.setRole("user");
 		String validToken = Jwts.builder()
-                .setId(String.valueOf(mockUser.getUserId()))
+                .setId(String.valueOf(mockUser.getId()))
                 .setSubject(mockUser.getUsername())
                 .claim("role", mockUser.getRole())
                 .setIssuer("pokepost")
@@ -89,13 +89,13 @@ class TokenServiceTest {
 	public void validateExpiredToken() {
         long now = System.currentTimeMillis();
         User mockUser = new User();
-        mockUser.setUserId(1l);
+        mockUser.setId(1l);
         mockUser.setUsername("colbytang");
         mockUser.setPassword("pass");
         mockUser.setEmail("ctang@email.com");
         mockUser.setRole("user");
 		String validToken = Jwts.builder()
-                .setId(String.valueOf(mockUser.getUserId()))
+                .setId(String.valueOf(mockUser.getId()))
                 .setSubject(mockUser.getUsername())
                 .claim("role", mockUser.getRole())
                 .setIssuer("pokepost")

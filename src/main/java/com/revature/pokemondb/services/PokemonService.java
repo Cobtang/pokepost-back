@@ -2,8 +2,6 @@ package com.revature.pokemondb.services;
 
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.revature.pokemondb.dtos.PokemonDTO;
 import com.revature.pokemondb.models.Pokemon;
 
@@ -17,6 +15,5 @@ public interface PokemonService {
     public Pokemon createPokemonObject (String pokemonJSON);
     public PokemonDTO createReferencePokemon (String pokemonName);
     public PokemonDTO createReferencePokemon (Integer pokemonId);
-    public PokemonDTO createReferencePokemonObject (String pokemonJSON, String pokemonSpeciesJSON) throws JsonMappingException, JsonProcessingException;
     public List<PokemonDTO> getAllPokemonById (List<Integer> ids);
 }

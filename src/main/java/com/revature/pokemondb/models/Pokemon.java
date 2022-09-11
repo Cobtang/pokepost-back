@@ -3,134 +3,76 @@ package com.revature.pokemondb.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.revature.pokemondb.dtos.PokemonDTO;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.*;
-import java.util.Map.Entry;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name= "pokemon", schema="pokemon_db")
+@Table(name= "pokemon")
 public class Pokemon {
 	
 	@Id
 	@Column
     private int id;
 
-	@Column(name="name")
     private String name;
-
-	@Transient 
     private int height;
-
-	@Transient
     private int weight;
+    private String primaryType;
+    private String secondaryType;
 
-	@Transient
-	private String[] types;
-
-	@Transient
-	private Map<String, Integer> baseStats;
-
-	@Column(name="sprite")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="id", referencedColumnName = "id")
+	private PokemonStats baseStats;
+    
 	private String imageUrl;
-
-	@Column(name="gen")
     private int generation;
-
-	@Transient
     private String category;
-
-	@Transient
     private String description;
+    private int baseExperience;
+    // Pokemon have 1 or 2 abilities and then a 3rd hidden ability sometimes.
+    @ManyToMany
+    @JoinTable(
+        name="pokemon_abilities",
+        joinColumns = @JoinColumn(name="user_id"),
+        inverseJoinColumns = @JoinColumn(name="ability_name")
+    )
+    private Set<Ability> abilities;
 
-	@Transient
-    private List<String[]> evolutionChain;
+    @ElementCollection
+    private Set<EvolutionChain> evolutionChain;
 
     @Transient
     private List<Map<String, String>> locationVersions;
 
     @Transient
-    private int baseExperience;
-
-    // Pokemon have 1 or 2 abilities and then a 3rd hidden ability sometimes.
-    @Transient
-    private List<Ability> abilities;
-
-    @Transient
     private PokemonMoves moves;
-
-    public Pokemon () {
-        this.id = 0;
-        this.name = "";
-        this.height = 0;
-        this.weight = 0;
-        this.types = new String[0];
-        this.baseStats = new HashMap<>();
-        this.imageUrl = "";
-        this.generation = 1;
-        this.category = "";
-        this.description = "";
-        this.evolutionChain = new ArrayList<>();
-        this.locationVersions = new ArrayList<>();
-        this.baseExperience = 0;
-        this.abilities = new ArrayList<>();
-        this.moves = new PokemonMoves();
-    }
     
     public Pokemon (int id) {
         this.id = id;
         this.name = "";
         this.height = 0;
         this.weight = 0;
-        this.types = null;
-        this.baseStats = new HashMap<>();
+        this.primaryType = "";
+        this.secondaryType = "";
+        this.baseStats = new PokemonStats();
         this.imageUrl = "";
         this.generation = 1;
         this.category = "";
         this.description = "";
-        this.evolutionChain = new ArrayList<>();
+        this.evolutionChain = new HashSet<>();
         this.locationVersions = new ArrayList<>();
         this.baseExperience = 0;
-        this.abilities = new ArrayList<>();
+        this.abilities = new HashSet<>();
         this.moves = new PokemonMoves();
-    }
-
-   @Autowired
-    public Pokemon (
-        int id,
-        String name,
-        int height,
-        int weight,
-        String[] types,
-        Map<String, Integer> baseStats,
-        String imageUrl,
-        int generation,
-        String category,
-        String description,
-        List<String[]> evolutionChain,
-        List<Map<String, String>> locationVersions,
-        int baseExperience,
-        List<Ability> abilities,
-        PokemonMoves moves
-    ) {
-        this.id = id;
-        this.name = name;
-        this.height = height;
-        this.weight = weight;
-        this.types = types;
-        this.baseStats = baseStats;
-        this.imageUrl = imageUrl;
-        this.generation = generation;
-        this.category = category;
-        this.description = description;
-        this.evolutionChain = evolutionChain;
-        this.locationVersions = locationVersions;
-        this.baseExperience = baseExperience;
-        this.abilities = abilities;
-        this.moves = moves;
     }
 
     public Pokemon(PokemonDTO pokemon) {
@@ -138,30 +80,6 @@ public class Pokemon {
         this.name = pokemon.getName();
         this.generation = pokemon.getGeneration();
         this.imageUrl = pokemon.getImageUrl();
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
     }
 
     public void setHeightFromInches(float heightInInches) {
@@ -183,10 +101,6 @@ public class Pokemon {
         return feet + "\'" + inches + "\"";
     }
 
-    public int getWeight() {
-        return weight;
-    }
-
     public float getWeightInPounds() {
         return weight / 4.536f;
     }
@@ -196,106 +110,15 @@ public class Pokemon {
         return pounds + "lb";
     }
 
-    public void setWeight(int weight) {
-        this.weight = weight;
-    }
-
     public void setWeightFromPounds(float weight) {
         this.weight = (int) (weight * 4.53592f);
-    }
-
-    public String[] getTypes() {
-        return types;
-    }
-
-    public void setTypes(String[] types) {
-        this.types = types;
-    }
-
-    public Map<String, Integer> getBaseStats() {
-        return baseStats;
-    }
-
-    public void setBaseStats(Map<String, Integer> stats) {
-        this.baseStats = stats;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public int getGeneration() {
-        return generation;
-    }
-
-    public void setGeneration(int generation) {
-        this.generation = generation;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<String[]> getEvolutionChain() {
-        return evolutionChain;
-    }
-
-    public void setEvolutionChain(List<String[]> evolutionChain) {
-        this.evolutionChain = evolutionChain;
-    }
-
-    public List<Map<String, String>> getLocationVersions() {
-        return locationVersions;
-    }
-
-    public void setLocationVersions(List<Map<String, String>> locations) {
-        this.locationVersions = locations;
-    }
-
-    public int getBaseExperience() {
-        return baseExperience;
-    }
-
-    public void setBaseExperience(int baseExperience) {
-        this.baseExperience = baseExperience;
-    }
-    public List<Ability> getAbilities() {
-        return abilities;
-    }
-
-    public void setAbilities(List<Ability> abilities) {
-        this.abilities = abilities;
-    }
-
-    public PokemonMoves getMoves() {
-        return moves;
-    }
-
-    public void setMoves(PokemonMoves moves) {
-        this.moves = moves;
     }
 
     @Override
     public String toString() {
         String retString = name + " (" + id + ") \n" +
         "[weight=" + getWeightInPoundsString() + ", height=" + getHeightInFeetInches() + "] \n"+ 
-        "[category=" + category + ", types=" + Arrays.toString(types) + ", base experience: " + baseExperience + "] \n" +
+        "[category=" + category + ", types=[" + primaryType + "," + secondaryType + "], base experience: " + baseExperience + "] \n" +
         "[generation=" + generation + "]\n";
         
         // Base Stats
@@ -340,11 +163,12 @@ public class Pokemon {
         retString += "[baseStats:";
 
         StringBuilder builder = new StringBuilder();
-        for (Entry<String, Integer> stat : baseStats.entrySet()) {
-            String baseStatName = stat.getKey();
-            Integer baseStatNumber = stat.getValue();
-            builder.append("\t" + baseStatName + ": " + baseStatNumber);
-        }
+        builder.append("\t" + "HP" + ": " + baseStats.getHp());
+        builder.append("\t" + "Attack" + ": " + baseStats.getAttack());
+        builder.append("\t" + "Defense" + ": " + baseStats.getDefense());
+        builder.append("\t" + "Special Attack" + ": " + baseStats.getSpecialAttack());
+        builder.append("\t" + "Special Defense" + ": " + baseStats.getSpecialDefense());
+        builder.append("\t" + "Speed" + ": " + baseStats.getSpeed());
         retString += builder.toString();
         retString += "] \n";
         return retString;
@@ -366,9 +190,9 @@ public class Pokemon {
         String retString = "";
         retString += "[evolutionChain: ";
         StringBuilder builder = new StringBuilder();
-        for (String[] evolution : evolutionChain) {
-            String evolutionName = evolution[0];
-            String evolutionURL = evolution[1];
+        for (EvolutionChain evolution : evolutionChain) {
+            String evolutionName = evolution.getName();
+            String evolutionURL = evolution.getUrl();
             builder.append("\t" + evolutionName + ": " + evolutionURL);
         }
         retString += builder.toString();

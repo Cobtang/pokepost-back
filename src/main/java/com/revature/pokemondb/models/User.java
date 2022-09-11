@@ -1,5 +1,7 @@
 package com.revature.pokemondb.models;
 
+import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
@@ -10,6 +12,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.revature.pokemondb.dtos.UserBodyDTO;
 import com.revature.pokemondb.dtos.UserDTO;
@@ -25,20 +30,24 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "users", schema = "pokemon_db")
-public class User {
+@Table(name = "users")
+public class User implements Serializable {
 	@Id
-	@Column(name = "id", updatable = false, insertable = false)
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long userId = 0l;
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@Column(name="id", updatable=false, insertable=false, nullable=false)
+	private long id;
 	private String username;
 	private String email;
 	private String role;
 	private String password;
 	private byte[] salt;
+	@CreationTimestamp
+	private Timestamp createdAt;
+	@UpdateTimestamp
+	private Timestamp updatedAt;
 
 	public User(long id) {
-		this.userId = id;
+		this.id = id;
 		this.username = "";
 		this.email = "";
 		this.password = "";
@@ -57,14 +66,14 @@ public class User {
 	}
 
 	public User(Long userId, String username, String email, String password) {
-		this.userId = userId;
+		this.id = userId;
 		this.username = username;
 		this.email = email;
 		this.password = password;
 	}
 
 	public User(Long userId, String username, String email, String password, byte[] salt) {
-		this.userId = userId;
+		this.id = userId;
 		this.username = username;
 		this.email = email;
 		this.salt = salt;
@@ -72,7 +81,7 @@ public class User {
 	}
 
 	public User(User user) {
-		this.userId = user.getUserId();
+		this.id = user.getId();
 		this.username = user.getUsername();
 		this.email = user.getEmail();
 		this.salt = user.getSalt();
@@ -81,7 +90,7 @@ public class User {
 	}
 
 	public User(UserDTO user) {
-		this.userId = user.getUserId();
+		this.id = user.getId();
 		this.username = user.getUsername();
 		this.email = user.getEmail();
 		this.role = user.getRole();
@@ -89,7 +98,7 @@ public class User {
 
 	public User(Map<String, String> map) {
 		if ((map.get("userId") != null)) {
-			this.userId = Long.valueOf(map.get("userId"));
+			this.id = Long.valueOf(map.get("userId"));
 		}
 
 		this.username = map.get("username");
@@ -110,7 +119,7 @@ public class User {
 	}
 
 	public User(UserBodyDTO user) {
-		this.userId = user.getUserId();
+		this.id = user.getId();
 		this.username = user.getUsername();
 		this.email = user.getEmail();
 		this.salt = user.getSalt();
@@ -123,7 +132,7 @@ public class User {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + Arrays.hashCode(salt);
-		result = prime * result + Objects.hash(email, password, userId, username);
+		result = prime * result + Objects.hash(email, password, id, username);
 		return result;
 	}
 
@@ -137,7 +146,7 @@ public class User {
 			return false;
 		User other = (User) obj;
 		return Objects.equals(email, other.email) && Objects.equals(password, other.password)
-				&& Arrays.equals(salt, other.salt) && Objects.equals(userId, other.userId)
+				&& Arrays.equals(salt, other.salt) && Objects.equals(id, other.id)
 				&& Objects.equals(username, other.username);
 	}
 
@@ -147,6 +156,6 @@ public class User {
 	@Override
 	public String toString() {
 		String retString = "UserId=%d, Username=%s, Email=%s, Password=%s, Salt=%s";
-		return String.format(retString, getUserId(), getUsername(), getEmail(), getPassword(), getSalt());
+		return String.format(retString, getId(), getUsername(), getEmail(), getPassword(), getSalt());
 	}
 }

@@ -43,12 +43,12 @@ class PokemonServiceImplTest {
             speciesJSON = getStringFromFile("src\\test\\resources\\pikachu_species.json");
             evolutionJSON = getStringFromFile("src\\test\\resources\\pikachu_evolution.json");
             locationJSON = getStringFromFile("src\\test\\resources\\pikachu_location.json");
-            PokemonDTO dto = new PokemonDTO();
+            Pokemon mockPokemon = new Pokemon();
             Mockito.when(webClient.getRequestJSON("https://pokeapi.co/api/v2/pokemon/pikachu")).thenReturn(pikachuJSON);
             Mockito.when(webClient.getRequestJSON("https://pokeapi.co/api/v2/pokemon-species/25")).thenReturn(speciesJSON);
             Mockito.when(webClient.getRequestJSON("https://pokeapi.co/api/v2/evolution-chain/10/")).thenReturn(evolutionJSON);
             Mockito.when(webClient.getRequestJSON("https://pokeapi.co/api/v2/pokemon/25/encounters")).thenReturn(locationJSON);
-            Mockito.when(pokemonRepo.save(dto)).thenReturn(dto);
+            Mockito.when(pokemonRepo.save(mockPokemon)).thenReturn(mockPokemon);
             Pokemon pokemon = pokemonService.createPokemon("pikachu");
             assertNotNull(pokemon);
     
@@ -62,10 +62,10 @@ class PokemonServiceImplTest {
 
     @Test 
     void getReferencePokemonById () {
-        PokemonDTO mockPokemon = new PokemonDTO();
+        Pokemon mockPokemon = new Pokemon();
         Mockito.when(pokemonRepo.findById(1)).thenReturn(Optional.of(mockPokemon));
-        PokemonDTO pokemon = pokemonService.getReferencePokemon(1);
-        assertNotNull(pokemon);
+        PokemonDTO pokemonDTO = pokemonService.getReferencePokemon(1);
+        assertNotNull(pokemonDTO);
     }
 
     @Test 
@@ -77,7 +77,7 @@ class PokemonServiceImplTest {
 
     @Test 
     void getReferencePokemonByName () {
-        PokemonDTO mockPokemon = new PokemonDTO();
+        Pokemon mockPokemon = new Pokemon();
         Mockito.when(pokemonRepo.findByName("pikachu")).thenReturn(Optional.of(mockPokemon));
         PokemonDTO pokemon = pokemonService.getReferencePokemon("pikachu");
         assertNotNull(pokemon);
@@ -93,7 +93,7 @@ class PokemonServiceImplTest {
     @Test
     void getAllPokemonById () {
         List<Integer> ids = Arrays.asList(1,2,3,4,5);
-        PokemonDTO mockPokemon = new PokemonDTO();
+        Pokemon mockPokemon = new Pokemon();
         Mockito.when(pokemonRepo.findById(1)).thenReturn(Optional.of(mockPokemon));
         Mockito.when(pokemonRepo.findById(2)).thenReturn(Optional.of(mockPokemon));
         Mockito.when(pokemonRepo.findById(3)).thenReturn(Optional.of(mockPokemon));

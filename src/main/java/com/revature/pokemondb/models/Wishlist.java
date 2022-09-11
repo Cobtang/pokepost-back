@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "pokemon_wishlists", schema = "pokemon_db")
+@Table(name = "pokemon_wishlists")
 public class Wishlist {
     @Id
     @Column(name = "id", updatable = false, insertable = false)
@@ -36,7 +36,7 @@ public class Wishlist {
 
     @ManyToOne()
     @JoinColumn(name = "pokemon_id")
-    private PokemonDTO pokemon;
+    private Pokemon pokemon;
 
     private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
 
