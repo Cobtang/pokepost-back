@@ -1,5 +1,10 @@
 package com.revature.pokemondb.services;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.pokemondb.dtos.PokemonDTO;
 import com.revature.pokemondb.models.Ability;
 import com.revature.pokemondb.models.EvolutionChain;
+import com.revature.pokemondb.models.Location;
 import com.revature.pokemondb.models.Move;
 import com.revature.pokemondb.models.Pokemon;
 import com.revature.pokemondb.models.PokemonMoves;
@@ -26,7 +32,7 @@ import com.revature.pokemondb.repositories.PokemonRepository;
 import com.revature.pokemondb.utils.StringUtils;
 
 @Service("PokemonService")
-public class PokemonServiceImpl implements PokemonService{
+public class PokemonServiceImpl implements PokemonService {
     private PokemonRepository pokeRepo;
     private WebClientService webClient;
 
@@ -34,7 +40,7 @@ public class PokemonServiceImpl implements PokemonService{
     private ObjectMapper objMapper;
 
 
-    public PokemonServiceImpl(PokemonRepository pRepo, WebClientService webClient) {
+    public PokemonServiceImpl(PokemonRepository pRepo, WebClientService webClient) throws IOException {
         this.pokeRepo = pRepo;
         this.webClient = webClient;
     }
@@ -81,6 +87,30 @@ public class PokemonServiceImpl implements PokemonService{
     public String getPokemonSpeciesJSON(String pokemonName) {
         String url = "https://pokeapi.co/api/v2/pokemon-species/" + StringUtils.convertToURIFormat(pokemonName);
         return  webClient.getRequestJSON(url);
+    }
+
+    public void saveJSONFilesToLocal (String pokemonName) throws JsonMappingException, JsonProcessingException, IOException {
+        String pokemonJson = getPokemonJSON (pokemonName);
+        String speciesJson = getPokemonSpeciesJSON(pokemonName);
+        String evolutionUrl = objMapper.readTree(speciesJson).get("evolution_chain").get("url").asText();
+        String evolutionJson =  webClient.getRequestJSON(evolutionUrl);
+        String locationsUrl = objMapper.readTree(pokemonJson).get("location_area_encounters").asText();
+        String locationJson =  webClient.getRequestJSON(locationsUrl);
+
+        final Path pokemonRoot = Paths.get("src/test/resources/json/pokemon/" + pokemonName);
+
+        try {
+            if (!Files.exists(pokemonRoot)) {
+                Files.createDirectory(pokemonRoot);
+            }
+        } catch (IOException e) {
+            throw new IOException("Could not initialize folder for upload!");
+        }
+        String pokemonPath = pokemonRoot.toString() + "/" + pokemonName;
+        Files.write(Paths.get(pokemonPath + ".json"), pokemonJson.getBytes());
+        Files.write(Paths.get(pokemonPath + "_species.json"), speciesJson.getBytes());
+        Files.write(Paths.get(pokemonPath + "_evolution.json"), evolutionJson.getBytes());
+        Files.write(Paths.get(pokemonPath + "_location.json"), locationJson.getBytes());
     }
 
     /**
@@ -223,7 +253,7 @@ public class PokemonServiceImpl implements PokemonService{
             JsonNode evolutionRoot = objMapper.readTree(evolutionJSON);
 
             // Evolution Chain
-            Set<EvolutionChain> evolutionChain = getEvolutionChain(evolutionRoot.get("chain"));
+            Set<EvolutionChain> evolutionChain = getEvolutionChain(evolutionRoot.get("chain"), evolutionRoot.get("id").asInt());
             pokemon.setEvolutionChain(evolutionChain);
 
             // ----------------------------Location JSON-----------------------------
@@ -232,8 +262,8 @@ public class PokemonServiceImpl implements PokemonService{
             JsonNode locationRoot = objMapper.readTree(locationJSON);
 
             // Locations/Versions
-            List<Map<String,String>> locationVersions = getLocationVersions(locationRoot);
-            pokemon.setLocationVersions(locationVersions);
+            List<Location> locations = getLocation(locationRoot);
+            pokemon.setLocationVersions(locations);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -351,7 +381,7 @@ public class PokemonServiceImpl implements PokemonService{
                 }
             }
         }
-        return new PokemonMoves(levelMoves, eggMoves, tutorMoves, machineMoves, otherMoves);
+        return new PokemonMoves(1, levelMoves, eggMoves, tutorMoves, machineMoves, otherMoves);
     }
 
     /**
@@ -383,11 +413,11 @@ public class PokemonServiceImpl implements PokemonService{
      * @param evolutionChainNode
      * @return
      */
-    private Set<EvolutionChain> getEvolutionChain (JsonNode evolutionChainNode) {
+    private Set<EvolutionChain> getEvolutionChain (JsonNode evolutionChainNode, int id) {
         Set<EvolutionChain> evolutionChain = new HashSet<>();
         do {
             EvolutionChain chain = new EvolutionChain();
-            chain.setId(evolutionChainNode.get("id").asInt());
+            chain.setId(id);
             String speciesName = evolutionChainNode.get("species").get("name").asText();
             speciesName = StringUtils.convertFromURIFormat(speciesName);
             chain.setName(speciesName);
@@ -443,6 +473,54 @@ public class PokemonServiceImpl implements PokemonService{
                 versionMap.put("versionName", version);
 
                 locationVersions.add(versionMap);
+            }
+        }
+        return locationVersions;
+    }
+
+    /**
+     * 
+     * @param locationRoot
+     * @return
+     */
+    private List<Location> getLocation (JsonNode locationRoot) {
+        List<Location> locationVersions = new ArrayList<>();
+        for (JsonNode locationNode : locationRoot) {
+            // Location
+            String locationName = locationNode.get("location_area").get("name").asText();
+            locationName = StringUtils.convertFromURIFormat(locationName);
+
+            String locationUrl = locationNode.get("location_area").get("url").asText();
+            
+            // Versions
+            JsonNode versionNodes = locationNode.get("version_details");
+            for (JsonNode versionNode : versionNodes) {
+                Location location = new Location();
+
+                // Location Name
+                location.setName(locationName);
+                
+                // URL
+                location.setUrl(locationUrl);
+
+                // Encounter Method
+                JsonNode encounterNode = versionNode.get("encounter_details");
+                Set<String> encounterSet = new HashSet<>();
+                
+                for (JsonNode encounter : encounterNode) {
+                    encounterSet.add(encounter.get("method").get("name").asText());
+                }
+                location.setMethods(encounterSet);
+
+                // Max Chance
+                int maxChance = versionNode.get("max_chance").asInt();
+                location.setMaxChance(maxChance);
+
+                // Version
+                String versionName = versionNode.get("version").get("name").asText();
+                location.setVersionName(versionName);
+
+                locationVersions.add(location);
             }
         }
         return locationVersions;

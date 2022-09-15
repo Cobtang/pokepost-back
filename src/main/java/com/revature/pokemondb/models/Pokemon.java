@@ -1,7 +1,6 @@
 package com.revature.pokemondb.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.revature.pokemondb.dtos.PokemonDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +10,7 @@ import javax.persistence.*;
 
 import java.util.*;
 
-@JsonIgnoreProperties({"hibernateLazyInitializer"})
+// @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,11 +37,12 @@ public class Pokemon {
     private String category;
     private String description;
     private int baseExperience;
+    
     // Pokemon have 1 or 2 abilities and then a 3rd hidden ability sometimes.
     @ManyToMany
     @JoinTable(
         name="pokemon_abilities",
-        joinColumns = @JoinColumn(name="user_id"),
+        joinColumns = @JoinColumn(name="pokemon_id"),
         inverseJoinColumns = @JoinColumn(name="ability_name")
     )
     private Set<Ability> abilities;
@@ -50,8 +50,13 @@ public class Pokemon {
     @ElementCollection
     private Set<EvolutionChain> evolutionChain;
 
-    @Transient
-    private List<Map<String, String>> locationVersions;
+    @ManyToMany
+    @JoinTable(
+        name="location_versions",
+        joinColumns = @JoinColumn(name="pokemon_id"),
+        inverseJoinColumns = @JoinColumn(name="location_version")
+    )
+    private List<Location> locationVersions;
 
     @Transient
     private PokemonMoves moves;
@@ -73,13 +78,6 @@ public class Pokemon {
         this.baseExperience = 0;
         this.abilities = new HashSet<>();
         this.moves = new PokemonMoves();
-    }
-
-    public Pokemon(PokemonDTO pokemon) {
-        this.id = pokemon.getId();
-        this.name = pokemon.getName();
-        this.generation = pokemon.getGeneration();
-        this.imageUrl = pokemon.getImageUrl();
     }
 
     public void setHeightFromInches(float heightInInches) {
@@ -215,12 +213,12 @@ public class Pokemon {
         String retString = "";
         retString += "[locations: ";
         StringBuilder builder = new StringBuilder();
-        for (Map<String, String> location : locationVersions) {
-            String locationName = location.get("locationName");
-            String locationURL = location.get("locationURL");
-            String versionName = location.get("versionName");
-            String maxChance = location.get("maxChance");
-            String methods = location.get("methods");
+        for (Location location : locationVersions) {
+            String locationName = location.getName();
+            String locationURL = location.getUrl();
+            String versionName = location.getVersionName();
+            String maxChance = String.valueOf(location.getMaxChance());
+            String methods = location.getMethods().toString();
             builder.append("\t\t" + locationName + ": " + locationURL + versionName + ": " + maxChance + " " + methods);
         }
         retString += builder.toString();

@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PokemonStats {
     @Id
-    @OneToOne(mappedBy = "id")
     private int id;
     private int hp;
     private int attack;

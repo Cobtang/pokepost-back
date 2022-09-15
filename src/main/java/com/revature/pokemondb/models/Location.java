@@ -2,24 +2,28 @@ package com.revature.pokemondb.models;
 
 import java.util.Set;
 
-import javax.persistence.Embeddable;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Embeddable
-public class EvolutionChain {
+public class Location {
     @Id
     private int id;
+
     private String name;
     private String url;
+
+    @ElementCollection
+    private Set<String> methods;
+    
+    private int maxChance;
+    private String versionName;
 }

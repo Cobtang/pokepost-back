@@ -194,7 +194,7 @@ public class PokemonTest {
     @Test
     void pokemonLocation() {
         Pokemon pokemon = new Pokemon();
-        List<Map<String, String>> expectedLocation = new ArrayList<>();
+        List<Location> expectedLocation = new ArrayList<>();
         pokemon.setLocationVersions(expectedLocation);
         assertEquals(pokemon.getLocationVersions(), expectedLocation);
     }
@@ -230,7 +230,7 @@ public class PokemonTest {
     @Test
     void pokemonMoves() {
         Pokemon pokemon = new Pokemon();
-        PokemonMoves expectedMoves = new PokemonMoves(new HashSet<Move>(), new HashSet<Move>(), new HashSet<Move>(), new HashSet<Move>(), new HashSet<Move>());
+        PokemonMoves expectedMoves = new PokemonMoves(1, new HashSet<Move>(), new HashSet<Move>(), new HashSet<Move>(), new HashSet<Move>(), new HashSet<Move>());
         Move move = new Move("name", "url", "level-up", 2);
         Set<Move> levelMoves = new HashSet<Move>();
         levelMoves.add(move);

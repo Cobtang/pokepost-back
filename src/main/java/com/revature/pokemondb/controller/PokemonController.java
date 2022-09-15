@@ -53,7 +53,7 @@ public class PokemonController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 	}
 
-	@Auth(requiredRole = "admin")
+	// @Auth(requiredRole = "admin")
 	@GetMapping("/allPokemon")
 	public ResponseEntity<List<PokemonDTO>> saveAllPokemonById () {
 		List<PokemonDTO> pokemonList = new ArrayList<>();
@@ -63,6 +63,30 @@ public class PokemonController {
 				pokemonList.add(pokemon);
 			}
 			return ResponseEntity.status(HttpStatus.OK).body(pokemonList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+	}
+
+	@GetMapping("/json")
+	public ResponseEntity<Void> savePokemonJsons (@RequestBody String body) {
+		try {
+			pokemonService.saveJSONFilesToLocal(body);
+			return ResponseEntity.status(HttpStatus.OK).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+	}
+
+	@GetMapping("/json/all")
+	public ResponseEntity<Void> saveAllPokemonJsons () {
+		try {
+			for (int i = 1; i <= 898; i++) {
+				pokemonService.saveJSONFilesToLocal(String.valueOf(i));
+			}
+			return ResponseEntity.status(HttpStatus.OK).build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
