@@ -84,7 +84,7 @@ public class PokemonController {
 	public ResponseEntity<Void> saveAllPokemonJsons () {
 		try {
 			for (int i = 1; i <= 898; i++) {
-				pokemonService.saveJSONFilesToLocal(String.valueOf(i));
+				pokemonService.saveJSONFilesToLocal(i);
 			}
 			return ResponseEntity.status(HttpStatus.OK).build();
 		} catch (Exception e) {

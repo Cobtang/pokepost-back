@@ -3,6 +3,7 @@
 
 database.properties
 cov.xml
+logs/
 
 ### Eclipse ###
 .metadata

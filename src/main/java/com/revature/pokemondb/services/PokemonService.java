@@ -20,4 +20,5 @@ public interface PokemonService {
     public PokemonDTO createReferencePokemon (Integer pokemonId);
     public List<PokemonDTO> getAllPokemonById (List<Integer> ids);
     public void saveJSONFilesToLocal(String string) throws JsonMappingException, JsonProcessingException, IOException;
+    public void saveJSONFilesToLocal(int i) throws JsonMappingException, JsonProcessingException, IOException;
 }

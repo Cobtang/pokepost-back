@@ -113,6 +113,31 @@ public class PokemonServiceImpl implements PokemonService {
         Files.write(Paths.get(pokemonPath + "_location.json"), locationJson.getBytes());
     }
 
+    public void saveJSONFilesToLocal (int id) throws JsonMappingException, JsonProcessingException, IOException {
+        String pokemonJson = getPokemonJSON (id);
+        String pokemonName = objMapper.readTree(pokemonJson).get("name").asText();
+        String speciesJson = getPokemonSpeciesJSON(pokemonName);
+        String evolutionUrl = objMapper.readTree(speciesJson).get("evolution_chain").get("url").asText();
+        String evolutionJson =  webClient.getRequestJSON(evolutionUrl);
+        String locationsUrl = objMapper.readTree(pokemonJson).get("location_area_encounters").asText();
+        String locationJson =  webClient.getRequestJSON(locationsUrl);
+
+        final Path pokemonRoot = Paths.get("src/test/resources/json/pokemon/" + pokemonName);
+
+        try {
+            if (!Files.exists(pokemonRoot)) {
+                Files.createDirectory(pokemonRoot);
+            }
+        } catch (IOException e) {
+            throw new IOException("Could not initialize folder for upload!");
+        }
+        String pokemonPath = pokemonRoot.toString() + "/" + pokemonName;
+        Files.write(Paths.get(pokemonPath + ".json"), pokemonJson.getBytes());
+        Files.write(Paths.get(pokemonPath + "_species.json"), speciesJson.getBytes());
+        Files.write(Paths.get(pokemonPath + "_evolution.json"), evolutionJson.getBytes());
+        Files.write(Paths.get(pokemonPath + "_location.json"), locationJson.getBytes());
+    }
+
     /**
      * 
      */
