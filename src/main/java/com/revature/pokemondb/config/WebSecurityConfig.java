@@ -1,5 +1,6 @@
 package com.revature.pokemondb.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
@@ -39,6 +40,9 @@ public class WebSecurityConfig {
 	// return http.build();
 	// }
 
+	@Value("${pokepost.frontend.url}")
+	private String frontendURL;
+
 	// This does some cors stuff maybe I think lol
 	@Bean
 	public WebMvcConfigurer corsConfig() {
@@ -47,10 +51,10 @@ public class WebSecurityConfig {
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
 						.allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
-						.allowedOrigins("*")
+						.allowedOrigins(frontendURL)
 						.allowedHeaders("*")
 						.exposedHeaders("*")
-						.allowCredentials(false)
+						.allowCredentials(true)
 						.maxAge(3600);
 			}
 		};
